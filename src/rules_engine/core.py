@@ -71,6 +71,10 @@ class Field:
     """Represents a field in the data that can be compared."""
     
     name : str
+
+    def parse_value(self, value: str):
+        if value:
+            return
     
     def __eq__(self, value: Any) -> 'ComparisonRule':
         return ComparisonRule(self.name, "==", value)
@@ -128,17 +132,19 @@ class ComparisonRule(Rule):
 
 
 if __name__ == "__main__":
+
+    from .resolvers import P
     # Create rules
     age_rule = Field("age") >= 18
     country_rule = Field("country") == "US"
     verified_rule = Field("is_verified") == True
     
     # Combine them
-    final_rule = (age_rule & country_rule) | verified_rule
-    
+    final_rule = (age_rule | country_rule) & verified_rule
+    final_rule2 = P(verified_rule & age_rule) | country_rule
     # Test data
-    user1 = {"age": 25, "country": "US", "is_verified": False}
-    user2 = {"age": 16, "country": "CA", "is_verified": True}
+    user1 = {"age": 19, "country": "US", "is_verified": False}
+    user2 = {"age": 19, "country": "US", "is_verified": False}
     
     print(f"User1: {final_rule.evaluate(user1)}")  # True (age & country pass)
-    print(f"User2: {final_rule.evaluate(user2)}")  # True (verified passes)
+    print(f"User2: {final_rule2.evaluate(user2)}")  # True (verified passes)
