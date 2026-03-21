@@ -3,6 +3,16 @@ from typing import Any, Dict, Optional
 from dataclasses import dataclass
 
 
+def get_nested(data: Dict[str, Any], path: str, default=None) -> Any:
+        current = data
+        
+        for key in path.split("."):
+            if not isinstance(current, dict):
+                return default
+            current = current.get(key, default)
+        return current
+
+
 class Rule(ABC):
     """Base class for all rules."""
     @abstractmethod
@@ -72,9 +82,6 @@ class Field:
     
     name : str
 
-    def parse_value(self, value: str):
-        if value:
-            return
     
     def __eq__(self, value: Any) -> 'ComparisonRule':
         return ComparisonRule(self.name, "==", value)
@@ -95,6 +102,28 @@ class Field:
         return ComparisonRule(self.name, "<=", value)
 
 
+    def contains(self, value: Any) -> 'ContainsRule':
+        return ContainsRule(self.name, value)
+
+    def len(self) -> 'LengthProxy':
+        return LengthProxy(self.name)
+
+    def any(self, predicate: Callable[[Any], bool]) -> 'AnyRule':
+        return AnyRule(self.name, predicate)
+
+    def all(self, predicate: Callable[[Any], bool] | None = None) -> 'AllRule':
+        if predicate is None:
+            # Field("roles").all() == "admin"  syntax sugar
+            return AllRule(self.name, lambda x: x == self)  # self is the value!
+        return AllRule(self.name, predicate)
+
+    def startswith(self, prefix: str) -> 'StartsWithRule':
+        return StartsWithRule(self.name, prefix)
+
+    def matches(self, pattern: Union[str, Pattern]) -> 'RegexMatchRule':
+        return RegexMatchRule(self.name, pattern)
+
+
 @dataclass
 class ComparisonRule(Rule):
     """Rule that compares a field against a value."""
@@ -109,10 +138,10 @@ class ComparisonRule(Rule):
         self.value = value
     
     def evaluate(self, data: Dict[str, Any]) -> bool:
-        if self.field_name not in data:
-            return False  # or raise KeyError? We'll decide later
-        
-        actual = data[self.field_name]
+
+        actual = get_nested(data, self.field_name)
+        if actual is None:
+            return False
         
         if self.operator == "==":
             return actual == self.value
@@ -128,6 +157,129 @@ class ComparisonRule(Rule):
             return actual <= self.value
         else:
             raise ValueError(f"Unknown operator: {self.operator}")
+
+
+from typing import Any, Callable, Pattern, Union
+import re
+
+# ────────────────────────────────────────
+#  Collection / sequence predicates
+# ────────────────────────────────────────
+
+@dataclass(frozen=True)
+class ContainsRule(Rule):
+    field_name: str
+    value: Any
+
+    def evaluate(self, data: Any) -> bool:
+        collection = get_nested(data, self.field_name)
+        if collection is None:
+            return False
+        try:
+            return self.value in collection
+        except TypeError:  # not iterable
+            return False
+
+
+@dataclass(frozen=True)
+class LengthComparisonRule(Rule):
+    field_name: str
+    operator: str
+    length: int
+
+    def evaluate(self, data: Any) -> bool:
+        value = get_nested(data, self.field_name)
+        if value is None:
+            return False
+
+        try:
+            actual_len = len(value)
+        except TypeError:
+            return False
+
+        if self.operator == "==": return actual_len == self.length
+        if self.operator == "!=": return actual_len != self.length
+        if self.operator == ">":  return actual_len >  self.length
+        if self.operator == ">=": return actual_len >= self.length
+        if self.operator == "<":  return actual_len <  self.length
+        if self.operator == "<=": return actual_len <= self.length
+        return False
+
+
+@dataclass(frozen=True)
+class AnyRule(Rule):
+    field_name: str
+    predicate: Callable[[Any], bool]
+
+    def evaluate(self, data: Any) -> bool:
+        collection = get_nested(data, self.field_name)
+        if not isinstance(collection, (list, tuple, set)):
+            return False
+        return any(self.predicate(item) for item in collection)
+
+
+@dataclass(frozen=True)
+class AllRule(Rule):
+    field_name: str
+    predicate: Callable[[Any], bool]
+
+    def evaluate(self, data: Any) -> bool:
+        collection = get_nested(data, self.field_name)
+        if not isinstance(collection, (list, tuple, set)):
+            return False
+        return all(self.predicate(item) for item in collection) if collection else False
+
+
+@dataclass(frozen=True)
+class StartsWithRule(Rule):
+    field_name: str
+    prefix: str
+
+    def evaluate(self, data: Any) -> bool:
+        value = get_nested(data, self.field_name)
+        if not isinstance(value, str):
+            return False
+        return value.startswith(self.prefix)
+
+
+@dataclass(frozen=True)
+class RegexMatchRule(Rule):
+    field_name: str
+    pattern: Union[str, Pattern]
+
+    def __post_init__(self):
+        if isinstance(self.pattern, str):
+            object.__setattr__(self, "pattern", re.compile(self.pattern))
+
+    def evaluate(self, data: Any) -> bool:
+        value = get_nested(data, self.field_name)
+        if not isinstance(value, str):
+            return False
+        return bool(self.pattern.search(value))
+
+
+@dataclass
+class LengthProxy:
+    """Helper so Field('items').len() > 5 works"""
+    field_name: str
+
+    def __gt__(self, n: int)  -> LengthComparisonRule: 
+        return LengthComparisonRule(self.field_name, ">",  n)
+    
+    def __ge__(self, n: int)  -> LengthComparisonRule:
+        return LengthComparisonRule(self.field_name, ">=", n)
+    
+    def __lt__(self, n: int)  -> LengthComparisonRule: 
+        return LengthComparisonRule(self.field_name, "<",  n)
+    
+    def __le__(self, n: int)  -> LengthComparisonRule: 
+        return LengthComparisonRule(self.field_name, "<=", n)
+    
+    def __eq__(self, n: int)  -> LengthComparisonRule: 
+        return LengthComparisonRule(self.field_name, "==", n)
+    
+    def __ne__(self, n: int)  -> LengthComparisonRule: 
+        return LengthComparisonRule(self.field_name, "!=", n)
 
 
 
@@ -148,3 +300,6 @@ if __name__ == "__main__":
     
     print(f"User1: {final_rule.evaluate(user1)}")  # True (age & country pass)
     print(f"User2: {final_rule2.evaluate(user2)}")  # True (verified passes)
+    data = {"user": {"profile": {"age": 25}}}
+    rule3 = (Field("user.profile.age") >= 18).evaluate(data)
+    print(f"data: {rule3}")
