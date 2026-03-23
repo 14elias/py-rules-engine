@@ -15,6 +15,16 @@ def get_nested(data: Dict[str, Any], path: str, default=None) -> Any:
 
 class Rule(ABC):
     """Base class for all rules."""
+
+    _registry: ClassVar[Dict[str, Type[Rule]]] = {}
+
+    @classmethod
+    def register(cls, subclass: Type[Rule]):
+        """Automatically register subclasses for deserialization."""
+        cls._registry[subclass.__name__] = subclass
+        return subclass
+
+        
     @abstractmethod
     def evaluate(self, data: Dict[str, Any]) -> bool:
         """Evaluate this rule against the provided data."""
