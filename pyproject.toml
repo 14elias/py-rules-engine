@@ -1,7 +1,7 @@
 [project]
 name = "rules-engine"
 version = "0.1.0"
-description = "Add your description here"
+description = "Composable, Pythonic business rules and validation engine with expression trees"
 readme = "README.md"
 authors = [
     { name = "14elias", email = "ellamebrahtom1995@gmail.com" }
@@ -15,3 +15,14 @@ rules-engine = "rules_engine:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.1.0",
+]
