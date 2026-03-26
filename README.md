@@ -1,23 +1,39 @@
 # rules-engine
 
-Composable, elegant business rules engine for Python using operator overloading and expression trees.
+A composable rule engine for Python that lets you build reusable, JSON-serializable logic using a clean, expressive syntax.
 
-Write rules like:
-
-````python
-from rules_engine import Field
-
-rule = (Field("age") >= 18) & (Field("is_premium") == True) | (Field("role") == "admin")
-print(rule({"age": 25, "is_premium": False, "role": "user"}))  # True
-
-### Nested Fields (Dot Notation)
-
-You can access nested dictionary keys using dot notation:
+## Example
 
 ```python
-from simplerules import Field
+from rules_engine import Field
 
-# Example data
+rule = (
+    ((Field("age") >= 18) & (Field("is_premium") == True)) |
+    (Field("role") == "admin")
+)
+
+data = {"age": 25, "is_premium": False, "role": "user"}
+
+print(rule.evaluate(data))  # True
+```
+
+---
+
+## Features
+
+* Compose rules using `&` (AND), `|` (OR), and `~` (NOT)
+* Safe nested field access using dot notation
+* JSON serialization / deserialization
+* Built-in predicates (contains, regex, prefix, length)
+* Clean DSL for building complex logic
+
+---
+
+## Nested Fields
+
+Access deeply nested data using dot notation:
+
+```python
 user = {
     "profile": {
         "age": 25,
@@ -26,34 +42,63 @@ user = {
     "roles": ["user", "editor"]
 }
 
-# Rules
 age_ok      = Field("profile.age") >= 18
 in_ethiopia = Field("profile.country") == "ET"
 has_role    = Field("roles").contains("editor")
 
-print((age_ok & in_ethiopia).evaluate(user))     # True
+print((age_ok & in_ethiopia).evaluate(user))  # True
+```
 
+---
 
+## Predicates
 
-#### New predicates section
-
-```markdown
-### Rich Predicates & Collection Checks
-
-`Field` objects support method-style predicates for strings, lists, sets, etc.
+### Collections
 
 ```python
-# Collection checks
 has_vip     = Field("tags").contains("vip")
 many_orders = Field("orders").len() >= 10
-has_premium = Field("plans").any(lambda p: "premium" in p)
-all_admins  = Field("roles").all() == "admin"           # every item equals "admin"
-is_staff    = Field("roles").all(lambda r: r in {"admin", "staff"})
+```
 
-# String checks
-corporate   = Field("email").matches(r".+@company\.com$")
-guest_user  = Field("username").startswith("guest_")
+### Strings
 
-# Combining
-power_user = has_premium & (many_orders | has_vip)
-````
+```python
+corporate  = Field("email").matches(r".+@company\.com$")
+guest_user = Field("username").startswith("guest_")
+```
+
+---
+
+## Serialization
+
+```python
+rule = (Field("age") >= 18)
+
+json_str = rule.to_json()
+restored = Rule.from_json(json_str)
+```
+
+---
+
+## Use Cases
+
+* API request validation
+* Feature flags and access control
+* Filtering pipelines
+* Rule-based AI decision systems
+* Fraud detection / business logic engines
+
+---
+
+## Notes
+
+* `AnyRule` / `AllRule` with custom lambda predicates are not serializable.
+* Use parentheses `()` to control logical precedence explicitly.
+
+---
+
+## Contributing
+
+Contributions are welcome. Feel free to open issues or submit pull requests.
+
+---
