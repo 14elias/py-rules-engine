@@ -11,7 +11,7 @@ class ContainsRule(Rule):
     field_name: str
     value: Any
 
-    def evaluate(self, data: Any) -> bool:
+    def evaluate(self, data: Any) ->  bool:
         collection = get_nested(data, self.field_name)
         if collection is None:
             return False
