@@ -1,13 +1,17 @@
 from typing import Any, Dict, Type
+from abc import ABC, abstractmethod
 
-class Predicate:
+
+class Predicate(ABC):
     _registry: Dict[str, Type["Predicate"]] = {}
 
+    @abstractmethod
     def evaluate(self, value: Any) -> bool:
-        raise NotImplementedError
-
+        pass
+    
+    @abstractmethod
     def to_dict(self) -> Dict[str, Any]:
-        raise NotImplementedError
+        pass
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Predicate":
@@ -20,7 +24,14 @@ class Predicate:
             raise ValueError(f"Unknown predicate type: {pred_type}")
 
         return cls._registry[pred_type]._from_dict_impl(data)
+    
+    
+    @classmethod
+    @abstractmethod
+    def _from_dict_impl(cls, data:Dict[str, Any]):
+        pass
 
+    
     @classmethod
     def register(cls, name: str):
         def decorator(subclass):

@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Union, Pattern, Callable
+from typing import Any, Dict
 from rules_engine.core.base import Rule
 from rules_engine.utils.nested import get_nested
 from rules_engine.predicates.base import Predicate
 
 
 
-@Rule.register
+@Rule.register("AnyRule")
 @dataclass(frozen=True)
 class AnyRule(Rule):
     field_name: str
@@ -20,20 +20,26 @@ class AnyRule(Rule):
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "type": "AnyRule",
-            "field": self.field,
+            "type": self._type,
+            "field": self.field_name,
             "predicate": self.predicate.to_dict()
         }
 
     @classmethod
     def _from_dict_impl(cls, data: Dict[str, Any]) -> 'AnyRule':
         return cls(
-            field=data["field"],
+            field_name=data["field"],
             predicate=Predicate.from_dict(data["predicate"])
         )
 
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return self.field_name == other.field_name and self.predicate == other.predicate
 
-@Rule.register
+
+@Rule.register("AllRule")
 @dataclass(frozen=True)
 class AllRule(Rule):
     field_name: str
@@ -47,14 +53,20 @@ class AllRule(Rule):
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "type": "AllRule",
-            "field": self.field,
+            "type": self._type,
+            "field": self.field_name,
             "predicate": self.predicate.to_dict()
         }
 
     @classmethod
     def _from_dict_impl(cls, data: Dict[str, Any]) -> 'AllRule':
         return cls(
-            field=data["field"],
+            field_name=data["field"],
             predicate=Predicate.from_dict(data["predicate"])
         )
+    
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return self.field_name == other.field_name and self.predicate == other.predicate

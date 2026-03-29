@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Any, Dict
-from ..core.base import Rule
-from ..utils.nested import get_nested
+from rules_engine.core.base import Rule
+from rules_engine.utils.nested import get_nested
 
 
-@Rule.register
+@Rule.register("LengthComparisonRule")
 @dataclass(frozen=True)
 class LengthComparisonRule(Rule):
     field_name: str
@@ -30,7 +30,7 @@ class LengthComparisonRule(Rule):
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "type": "LengthComparisonRule",
+            "type": self._type,
             "field": self.field_name,
             "op": self.operator,
             "length": self.length,
@@ -42,6 +42,16 @@ class LengthComparisonRule(Rule):
             field_name=data["field"],
             operator=data["op"],
             length=data["length"],
+        )
+    
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return (
+            self.field_name == other.field_name and
+            self.operator == other.operator and
+            self.length == other.length
         )
 
     def __repr__(self) -> str:

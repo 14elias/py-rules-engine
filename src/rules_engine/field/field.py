@@ -1,10 +1,11 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Callable, Union, Pattern, Type, ClassVar
-from ..rules.comparison import ComparisonRule
-from ..rules.contains import ContainsRule
-from ..rules.length import LengthComparisonRule
-from ..rules.strings import StartsWithRule, RegexMatchRule
-from ..rules.collection import AnyRule, AllRule
+from typing import Any, Union, Pattern
+from rules_engine.rules.comparison import ComparisonRule
+from rules_engine.rules.contains import ContainsRule
+from rules_engine.rules.length import LengthComparisonRule
+from rules_engine.rules.strings import StartsWithRule, RegexMatchRule, EndsWithRule
+from rules_engine.rules.collection import AnyRule, AllRule
+from rules_engine.predicates.base import Predicate
 
 
 
@@ -37,16 +38,17 @@ class Field:
     def len(self) -> 'LengthProxy':
         return LengthProxy(self.name)
 
-    def any(self, predicate: Callable[[Any], bool]) -> 'AnyRule':
+    def any(self, predicate: Predicate) -> 'AnyRule':
         return AnyRule(self.name, predicate)
 
-    def all(self, predicate: Callable[[Any], bool] | None = None) -> 'AllRule':
-        if predicate is None:
-            return AllRule(self.name, lambda x: x == self.name)  # Fixed: compare to value
+    def all(self, predicate: Predicate) -> 'AllRule':
         return AllRule(self.name, predicate)
 
     def startswith(self, prefix: str) -> 'StartsWithRule':
         return StartsWithRule(self.name, prefix)
+    
+    def endswith(self, suffix: str) -> 'StartsWithRule':
+        return EndsWithRule(self.name, suffix)
 
     def matches(self, pattern: Union[str, Pattern]) -> 'RegexMatchRule':
         return RegexMatchRule(self.name, pattern)
@@ -57,12 +59,23 @@ class Field:
 class LengthProxy:
     field_name: str
 
-    def __gt__(self, n: int) -> LengthComparisonRule:  return LengthComparisonRule(self.field_name, ">", n)
-    def __ge__(self, n: int) -> LengthComparisonRule:  return LengthComparisonRule(self.field_name, ">=", n)
-    def __lt__(self, n: int) -> LengthComparisonRule:  return LengthComparisonRule(self.field_name, "<", n)
-    def __le__(self, n: int) -> LengthComparisonRule:  return LengthComparisonRule(self.field_name, "<=", n)
-    def __eq__(self, n: int) -> LengthComparisonRule:  return LengthComparisonRule(self.field_name, "==", n)
-    def __ne__(self, n: int) -> LengthComparisonRule:  return LengthComparisonRule(self.field_name, "!=", n)
+    def __gt__(self, n: int) -> LengthComparisonRule:  
+        return LengthComparisonRule(self.field_name, ">", n)
+    
+    def __ge__(self, n: int) -> LengthComparisonRule:  
+        return LengthComparisonRule(self.field_name, ">=", n)
+    
+    def __lt__(self, n: int) -> LengthComparisonRule:  
+        return LengthComparisonRule(self.field_name, "<", n)
+    
+    def __le__(self, n: int) -> LengthComparisonRule:  
+        return LengthComparisonRule(self.field_name, "<=", n)
+    
+    def __eq__(self, n: int) -> LengthComparisonRule:  
+        return LengthComparisonRule(self.field_name, "==", n)
+    
+    def __ne__(self, n: int) -> LengthComparisonRule:  
+        return LengthComparisonRule(self.field_name, "!=", n)
 
 
 

@@ -1,6 +1,9 @@
 from typing import Any
 
 def get_nested(data: Any, path: str, default: Any = None) -> Any:
+    if not isinstance(path, str):
+        return default
+    
     if not path:
         return data
 

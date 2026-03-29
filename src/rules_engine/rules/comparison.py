@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Any, Dict
-from ..core.base import Rule
-from ..utils.nested import get_nested
+from rules_engine.core.base import Rule
+from rules_engine.utils.nested import get_nested
 
 
 
-@Rule.register
+@Rule.register("ComparisonRule")
 @dataclass(frozen=True)
 class ComparisonRule(Rule):
     field_name: str
@@ -15,6 +15,8 @@ class ComparisonRule(Rule):
     def evaluate(self, data: Any) -> bool:
         actual = get_nested(data, self.field_name)
         if actual is None:
+            return False
+        if type(actual) != type(self.value):
             return False
 
         if self.operator == "==": return actual == self.value
@@ -27,7 +29,7 @@ class ComparisonRule(Rule):
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "type": "ComparisonRule",
+            "type": self._type,
             "field": self.field_name,
             "op": self.operator,
             "value": self.value,
@@ -40,6 +42,17 @@ class ComparisonRule(Rule):
             operator=data["op"],
             value=data["value"],
         )
+    
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+
+        return (
+            self.field_name == other.field_name and
+            self.operator == other.operator and
+            self.value == other.value
+        )
+        
 
     def __repr__(self) -> str:
         return f"Field({self.field_name!r}) {self.operator} {self.value!r}"

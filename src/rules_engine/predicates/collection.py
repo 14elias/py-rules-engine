@@ -18,6 +18,11 @@ class Contains(Predicate):
     def _from_dict_impl(cls, data):
         return cls(data["item"])
     
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return self.item == other.item
 
 
 @Predicate.register("in")
@@ -34,6 +39,12 @@ class In(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["options"])
+    
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return self.options == other.options
     
 
 
@@ -52,6 +63,12 @@ class LengthEquals(Predicate):
     def _from_dict_impl(cls, data):
         return cls(data["length"])
     
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return self.length == other.length
+    
 
 
 @Predicate.register("len_gt")
@@ -68,6 +85,12 @@ class LengthGreaterThan(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["length"])
+    
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return self.length == other.length
 
 
 
@@ -85,3 +108,9 @@ class LengthLessThan(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["length"])
+    
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        return self.length == other.length

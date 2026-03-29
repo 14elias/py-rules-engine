@@ -1,8 +1,20 @@
 # rules-engine
 
-A composable rule engine for Python that lets you build reusable, JSON-serializable logic using a clean, expressive syntax.
+A composable, JSON-serializable rule engine for Python.
 
-## Example
+Build reusable, expressive logic using a clean DSL — perfect for validation, filtering, and decision systems.
+
+---
+
+## ✨ Installation
+
+```bash
+pip install rules-engine
+```
+
+---
+
+## 🚀 Quick Example
 
 ```python
 from rules_engine import Field
@@ -19,19 +31,29 @@ print(rule.evaluate(data))  # True
 
 ---
 
-## Features
+## 🔥 Features
 
-* Compose rules using `&` (AND), `|` (OR), and `~` (NOT)
-* Safe nested field access using dot notation
-* JSON serialization / deserialization
-* Built-in predicates (contains, regex, prefix, length)
-* Clean DSL for building complex logic
+- Compose rules using:
+  - `&` → AND
+  - `|` → OR
+  - `~` → NOT
+
+- Safe nested field access using dot notation
+- JSON serialization / deserialization
+- Built-in predicates:
+  - `contains`
+  - `regex / matches`
+  - `startswith`
+  - `length`
+
+- Clean and expressive DSL
+- Extensible architecture (custom rules & predicates)
 
 ---
 
-## Nested Fields
+## 🧩 Nested Fields
 
-Access deeply nested data using dot notation:
+Access deeply nested data easily:
 
 ```python
 user = {
@@ -51,54 +73,71 @@ print((age_ok & in_ethiopia).evaluate(user))  # True
 
 ---
 
-## Predicates
+## 🧠 Predicates
 
 ### Collections
 
 ```python
-has_vip     = Field("tags").contains("vip")
-many_orders = Field("orders").len() >= 10
+Field("tags").contains("vip")
+Field("orders").len() >= 10
 ```
 
 ### Strings
 
 ```python
-corporate  = Field("email").matches(r".+@company\.com$")
-guest_user = Field("username").startswith("guest_")
+Field("email").matches(r".+@company\.com$")
+Field("username").startswith("guest_")
 ```
 
 ---
 
-## Serialization
+## 🔄 Serialization
 
 ```python
-rule = (Field("age") >= 18)
+from rules_engine import Field, Rule
+
+rule = Field("age") >= 18
 
 json_str = rule.to_json()
 restored = Rule.from_json(json_str)
+
+assert rule.evaluate({"age": 20}) == restored.evaluate({"age": 20})
 ```
 
 ---
 
-## Use Cases
+## 🧪 Example Use Cases
 
-* API request validation
-* Feature flags and access control
-* Filtering pipelines
-* Rule-based AI decision systems
-* Fraud detection / business logic engines
+- API request validation
+- Feature flags & access control
+- Data filtering pipelines
+- Rule-based AI decision systems
+- Fraud detection systems
+
+## 🏗️ Project Structure (for contributors)
+
+```
+src/
+  rules_engine/
+    core/
+    rules/
+    predicates/
+    field/
+    utils/
+```
 
 ---
 
-## Notes
+## 🤝 Contributing
 
-* `AnyRule` / `AllRule` with custom lambda predicates are not serializable.
-* Use parentheses `()` to control logical precedence explicitly.
+Contributions are welcome!
 
----
-
-## Contributing
-
-Contributions are welcome. Feel free to open issues or submit pull requests.
+- Open an issue for bugs or feature requests
+- Submit pull requests for improvements
+- Help expand predicates and rule types
 
 ---
+
+## 📄 License
+
+MIT License © 2026 Elias
