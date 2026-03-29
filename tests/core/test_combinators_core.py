@@ -1,19 +1,16 @@
-# tests/test_logical_rules.py
-
 import pytest
 from dataclasses import dataclass
 from typing import Any
 
 from rules_engine import Rule
-# Import the rules (adjust path if needed)
 from rules_engine.core.combinators import AndRule, OrRule, NotRule, ParenRule
 
 
 
-# ====================== TEST PREDICATES (for building rules) ======================
+# ====================== TEST  (for building rules) ======================
 
 @dataclass(frozen=True)
-class DummyPredicate(Rule):  # Inherit from Rule or use a real Predicate
+class DummyRule(Rule):  # Inherit from Rule 
     value: bool
     name: str = "dummy"
 
@@ -28,35 +25,35 @@ class DummyPredicate(Rule):  # Inherit from Rule or use a real Predicate
         return cls(value=data["value"], name=data.get("name", "dummy"))
 
     def __eq__(self, other):
-        if not isinstance(other, DummyPredicate):
+        if not isinstance(other, DummyRule):
             return False
         return self.value == other.value and self.name == other.name
 
-Rule.register("dummy")(DummyPredicate)
+Rule.register("dummy")(DummyRule)
 
 
 @pytest.fixture
 def T():
     """True predicate"""
-    return DummyPredicate(True, "T")
+    return DummyRule(True, "T")
 
 
 @pytest.fixture
 def F():
     """False predicate"""
-    return DummyPredicate(False, "F")
+    return DummyRule(False, "F")
 
 
 @pytest.fixture
 def A():
     """Another True predicate with different identity"""
-    return DummyPredicate(True, "A")
+    return DummyRule(True, "A")
 
 
 @pytest.fixture
 def B():
     """Another False predicate"""
-    return DummyPredicate(False, "B")
+    return DummyRule(False, "B")
 
 
 # ====================== REGISTRATION TESTS ======================
@@ -91,7 +88,7 @@ class TestAndRule:
         """Left False should not evaluate right side"""
         evaluated_right = [False]
 
-        class SideEffectPredicate(DummyPredicate):
+        class SideEffectPredicate(DummyRule):
             def __init__(self):
                 super().__init__(value=True, name="side_effect")
 

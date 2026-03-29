@@ -90,9 +90,8 @@ def test_get_nested_mixed_types():
 def test_get_nested_invalid_path_types():
     """Test with non-string paths (should probably handle gracefully)."""
     data = {"a": 1}
-    # Current implementation assumes path is string. Let's test robustness.
-    assert get_nested(data, None) is None  # or could raise? But current code would fail
-    # Note: You may want to add input validation in the function itself.
+    assert get_nested(data, None) is None  
+    
 
 
 @pytest.mark.parametrize(

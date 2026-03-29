@@ -1,6 +1,5 @@
 import pytest
 from rules_engine import Field, Rule
-from rules_engine import Rule as BaseRule
 from rules_engine.rules.length import LengthComparisonRule
 
 
@@ -192,6 +191,5 @@ def test_length_repr():
     ],
 )
 def test_length_parametrized(sample_data, field, operator, length, expected):
-    # We need to create the rule directly for arbitrary operators
     rule = LengthComparisonRule(field_name=field, operator=operator, length=length)
     assert rule.evaluate(sample_data) is expected

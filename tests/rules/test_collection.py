@@ -2,7 +2,7 @@ import pytest
 from rules_engine import Field, Rule
 from rules_engine.rules.collection import AnyRule, AllRule
 from rules_engine.predicates import Contains, GreaterThan, Equals
-# If you have more predicates, you can import them too
+
 
 
 @pytest.fixture
@@ -136,7 +136,7 @@ def test_any_rule_serialization_roundtrip(sample_data):
     d = original.to_dict()
     assert d["type"] == "AnyRule"
     assert d["field"] == "tags"
-    assert d["predicate"]["type"] == "contains"   # assuming Contains has type
+    assert d["predicate"]["type"] == "contains"   # assuming contains has type
 
     loaded = Rule.from_dict(d)
     assert isinstance(loaded, AnyRule)

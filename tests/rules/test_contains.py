@@ -1,6 +1,6 @@
 import pytest
 from rules_engine import Field, Rule
-from rules_engine.rules.contains import ContainsRule   # adjust import path if needed
+from rules_engine.rules.contains import ContainsRule   
 
 
 

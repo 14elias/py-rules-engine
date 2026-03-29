@@ -1,6 +1,6 @@
 import pytest
 from rules_engine import Field, Rule
-from rules_engine.rules.comparison import ComparisonRule  # adjust path if needed
+from rules_engine.rules.comparison import ComparisonRule  
 
 
 @pytest.fixture
@@ -177,6 +177,5 @@ def test_comparison_repr(sample_data2):
     ],
 )
 def test_comparison_parametrized(sample_data, field, operator, value, expected):
-    # Create rule directly for full operator coverage
     rule = ComparisonRule(field_name=field, operator=operator, value=value)
     assert rule.evaluate(sample_data) is expected

@@ -1,7 +1,7 @@
 import pytest
 import re
 from rules_engine import Field, Rule
-from rules_engine.core.base import Rule  # if needed for direct access
+from rules_engine.core.base import Rule  
 
 
 @pytest.fixture
@@ -202,7 +202,7 @@ def test_repr():
     rx = Field("email").matches(r".+@example.com")
 
     assert "startswith" in repr(sw).lower()
-    assert "endswith" in repr(ew).lower()   # note: your current EndsWithRule __repr__ has a bug (says startswith)
+    assert "endswith" in repr(ew).lower()   
     assert "matches" in repr(rx).lower()
 
 
@@ -222,9 +222,8 @@ def test_repr():
     ],
 )
 def test_rules_parametrized(sample_data, field, value, rule_type, arg, expected):
-    # override field for this test if needed
     test_data = sample_data.copy()
-    # For simplicity we use the fixture and assume field exists; adjust if needed
+    
 
     if rule_type == "startswith":
         rule = Field(field).startswith(arg)

@@ -1,4 +1,3 @@
-
 import pytest
 from rules_engine.predicates.base import Predicate
 from rules_engine.predicates import Contains, In, LengthEquals, LengthGreaterThan, LengthLessThan
@@ -136,7 +135,7 @@ class TestLengthEquals:
 
     def test_len_eq_string(self, sample_data):
         pred = LengthEquals(11)
-        assert pred.evaluate(sample_data["string"]) is True  # "hello world"
+        assert pred.evaluate(sample_data["string"]) is True  
 
     def test_len_eq_empty(self, sample_data):
         pred = LengthEquals(0)
