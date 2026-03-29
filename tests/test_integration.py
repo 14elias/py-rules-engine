@@ -1,4 +1,4 @@
-from src.rules_engine.field.field import Field
+from rules_engine import Field
 
 def test_complex_rule():
     rule = (

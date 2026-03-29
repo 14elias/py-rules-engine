@@ -12,3 +12,4 @@ def sample_data():
             "email": "test@example.com"
         }
     }
+
