@@ -1,0 +1,52 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # 3. Install uv (modern dependency manager)
+      - name: Install uv
+        run: pip install uv
+
+      # 4. Install dev dependencies
+      - name: Install dependencies
+        run: uv sync --group dev
+
+      # 5. Run linting (ruff)
+      - name: Run ruff
+        run: uv run ruff check .
+
+      # 6. Check formatting (fail if not properly formatted)
+      - name: Check code formatting
+        run: uv run ruff format --check .
+
+      # 7. Run tests with coverage
+      - name: Run tests
+        run: uv run pytest --cov=rules_engine
+
+      # 8. Upload coverage to GitHub Actions summary (optional)
+      - name: Upload coverage report
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: htmlcov/
