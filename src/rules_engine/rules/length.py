@@ -22,7 +22,7 @@ class LengthComparisonRule(Rule):
     operator: str
     """Comparison operator. One of: '==', '!=', '>', '>=', '<', '<='."""
 
-    value: int
+    length: int
     """The length value to compare against."""
 
     def evaluate(self, data: Any) -> bool:
@@ -80,5 +80,5 @@ class LengthComparisonRule(Rule):
 
     def __repr__(self) -> str:
         """Return a readable string representation."""
-        
+
         return f"Field({self.field_name!r}).len() {self.operator} {self.length}"
