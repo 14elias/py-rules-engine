@@ -2,8 +2,8 @@
 
 ![CI](https://github.com/14elias/rules-engine/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![License](https://img.shields.io/github/license/14elias/rules-engine)
-![Version](https://img.shields.io/github/v/release/14elias/rules-engine)
+![License](https://img.shields.io/github/license/14elias/py-rules-engine)
+![Version](https://img.shields.io/github/v/release/14elias/py-rules-engine)
 
 **A composable, JSON-serializable rule engine for Python.**
 
