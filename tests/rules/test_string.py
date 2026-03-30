@@ -22,6 +22,7 @@ def sample_data():
 
 # ====================== StartsWithRule ======================
 
+
 def test_startswith_basic(sample_data):
     rule = Field("name").startswith("Ab")
     assert rule.evaluate(sample_data) is True
@@ -70,6 +71,7 @@ def test_startswith_serialization(sample_data):
 
 # ====================== EndsWithRule ======================
 
+
 def test_endswith_basic(sample_data):
     rule = Field("name").endswith("el")
     assert rule.evaluate(sample_data) is True
@@ -103,6 +105,7 @@ def test_endswith_serialization(sample_data):
 
 
 # ====================== RegexMatchRule ======================
+
 
 def test_regex_basic_match(sample_data):
     rule = Field("profile.email").matches(r".+@example\.com")
@@ -175,6 +178,7 @@ def test_regex_invalid_pattern_raises():
 
 # ====================== Equality & Repr ======================
 
+
 def test_rules_equality():
     r1 = Field("name").startswith("Ab")
     r2 = Field("name").startswith("Ab")
@@ -203,11 +207,12 @@ def test_repr():
     rx = Field("email").matches(r".+@example.com")
 
     assert "startswith" in repr(sw).lower()
-    assert "endswith" in repr(ew).lower()   
+    assert "endswith" in repr(ew).lower()
     assert "matches" in repr(rx).lower()
 
 
 # ====================== Parametrized Edge Cases ======================
+
 
 @pytest.mark.parametrize(
     "field, value, rule_type, arg, expected",
@@ -224,7 +229,6 @@ def test_repr():
 )
 def test_rules_parametrized(sample_data, field, value, rule_type, arg, expected):
     test_data = sample_data.copy()
-    
 
     if rule_type == "startswith":
         rule = Field(field).startswith(arg)

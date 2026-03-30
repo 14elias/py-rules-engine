@@ -26,7 +26,7 @@ class Predicate(ABC):
         """
 
         pass
-    
+
     @abstractmethod
     def to_dict(self) -> Dict[str, Any]:
         """Convert the predicate to a dictionary for serialization."""
@@ -46,16 +46,14 @@ class Predicate(ABC):
             raise ValueError(f"Unknown predicate type: {pred_type}")
 
         return cls._registry[pred_type]._from_dict_impl(data)
-    
-    
+
     @classmethod
     @abstractmethod
-    def _from_dict_impl(cls, data:Dict[str, Any]):
+    def _from_dict_impl(cls, data: Dict[str, Any]):
         """Internal deserialization method implemented by concrete predicate classes."""
 
         pass
 
-    
     @classmethod
     def register(cls, name: str):
         """Decorator to register a predicate class in the global registry."""
@@ -64,4 +62,5 @@ class Predicate(ABC):
             cls._registry[name] = subclass
             subclass._type = name
             return subclass
+
         return decorator

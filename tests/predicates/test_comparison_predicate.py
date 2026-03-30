@@ -12,6 +12,7 @@ from rules_engine.predicates.base import Predicate
 
 # ====================== Fixtures ======================
 
+
 @pytest.fixture
 def sample_value():
     """Common test values with different types."""
@@ -31,8 +32,8 @@ def sample_value():
 
 # ====================== Equals Predicate ======================
 
-class TestEquals:
 
+class TestEquals:
     def test_equals_basic(self, sample_value):
         pred = Equals("Abel")
         assert pred.evaluate(sample_value["name"]) is True
@@ -57,28 +58,31 @@ class TestEquals:
         """28 != '28'"""
         pred = Equals(28)
         assert pred.evaluate("28") is False
-        assert pred.evaluate(28.0) is False   # int != float
+        assert pred.evaluate(28.0) is False  # int != float
 
     def test_equals_none(self, sample_value):
         pred = Equals(None)
         assert pred.evaluate(sample_value["none_value"]) is True
         assert pred.evaluate("None") is False
 
-    @pytest.mark.parametrize("value, expected", [
-        ("", True),
-        (0, True),
-        (False, True),
-        (None, True),
-    ])
+    @pytest.mark.parametrize(
+        "value, expected",
+        [
+            ("", True),
+            (0, True),
+            (False, True),
+            (None, True),
+        ],
+    )
     def test_equals_edge_values(self, sample_value, value, expected):
         pred = Equals(value)
 
-        key = ''
+        key = ""
         if value is None:
             key = "none_value"
         elif value is False:
             key = "false_bool"
-        elif value == 0 :
+        elif value == 0:
             key = "zero"
         else:
             key = "empty_str"
@@ -87,8 +91,8 @@ class TestEquals:
 
 # ====================== NotEquals Predicate ======================
 
-class TestNotEquals:
 
+class TestNotEquals:
     def test_not_equals_basic(self, sample_value):
         pred = NotEquals("John")
         assert pred.evaluate(sample_value["name"]) is True
@@ -106,8 +110,8 @@ class TestNotEquals:
 
 # ====================== GreaterThan / GreaterThanOrEqual ======================
 
-class TestGreaterThan:
 
+class TestGreaterThan:
     def test_gt_success(self, sample_value):
         pred = GreaterThan(25)
         assert pred.evaluate(sample_value["age"]) is True
@@ -118,8 +122,8 @@ class TestGreaterThan:
 
     def test_gt_type_mismatch(self, sample_value):
         pred = GreaterThan(25)
-        assert pred.evaluate("30") is False          # str vs int
-        assert pred.evaluate(25.0) is False          # float vs int
+        assert pred.evaluate("30") is False  # str vs int
+        assert pred.evaluate(25.0) is False  # float vs int
 
     def test_gt_with_floats(self, sample_value):
         pred = GreaterThan(3.14)
@@ -127,7 +131,6 @@ class TestGreaterThan:
 
 
 class TestGreaterThanOrEqual:
-
     def test_gte_success_equal(self, sample_value):
         pred = GreaterThanOrEqual(28)
         assert pred.evaluate(sample_value["age"]) is True
@@ -138,13 +141,13 @@ class TestGreaterThanOrEqual:
 
     def test_gte_type_mismatch(self, sample_value):
         pred = GreaterThanOrEqual(85)
-        assert pred.evaluate(85.5) is False   # int vs float
+        assert pred.evaluate(85.5) is False  # int vs float
 
 
 # ====================== LessThan / LessThanOrEqual ======================
 
-class TestLessThan:
 
+class TestLessThan:
     def test_lt_success(self, sample_value):
         pred = LessThan(30)
         assert pred.evaluate(sample_value["age"]) is True
@@ -159,7 +162,6 @@ class TestLessThan:
 
 
 class TestLessThanOrEqual:
-
     def test_lte_success_equal(self, sample_value):
         pred = LessThanOrEqual(28)
         assert pred.evaluate(sample_value["age"]) is True
@@ -171,6 +173,7 @@ class TestLessThanOrEqual:
 
 # ====================== Parametrized Comprehensive Tests ======================
 
+
 @pytest.mark.parametrize(
     "predicate_cls, threshold, test_value, expected",
     [
@@ -178,28 +181,23 @@ class TestLessThanOrEqual:
         (Equals, 28, 28, True),
         (Equals, 28, 29, False),
         (Equals, "Abel", "Abel", True),
-        (Equals, "Abel", "abel", False),   # case sensitive
+        (Equals, "Abel", "abel", False),  # case sensitive
         (Equals, True, True, True),
         (Equals, None, None, True),
-
         # NotEquals
         (NotEquals, 28, 29, True),
         (NotEquals, 28, 28, False),
-
         # GreaterThan
         (GreaterThan, 25, 28, True),
         (GreaterThan, 28, 28, False),
         (GreaterThan, 30, 28, False),
-
         # GreaterThanOrEqual
         (GreaterThanOrEqual, 28, 28, True),
         (GreaterThanOrEqual, 25, 28, True),
         (GreaterThanOrEqual, 30, 28, False),
-
         # LessThan
         (LessThan, 30, 28, True),
         (LessThan, 28, 28, False),
-
         # LessThanOrEqual
         (LessThanOrEqual, 28, 28, True),
         (LessThanOrEqual, 30, 28, True),
@@ -213,15 +211,19 @@ def test_comparison_predicates_param(predicate_cls, threshold, test_value, expec
 
 # ====================== Serialization Tests ======================
 
-@pytest.mark.parametrize("predicate_cls, value", [
-    (Equals, "Abel"),
-    (Equals, 100),
-    (NotEquals, 0),
-    (GreaterThan, 18),
-    (GreaterThanOrEqual, 85.5),
-    (LessThan, 100),
-    (LessThanOrEqual, 25),
-])
+
+@pytest.mark.parametrize(
+    "predicate_cls, value",
+    [
+        (Equals, "Abel"),
+        (Equals, 100),
+        (NotEquals, 0),
+        (GreaterThan, 18),
+        (GreaterThanOrEqual, 85.5),
+        (LessThan, 100),
+        (LessThanOrEqual, 25),
+    ],
+)
 def test_serialization_roundtrip(predicate_cls, value):
     original = predicate_cls(value)
     data = original.to_dict()
@@ -235,6 +237,7 @@ def test_serialization_roundtrip(predicate_cls, value):
 
 
 # ====================== Equality Tests ======================
+
 
 def test_equality():
     assert Equals(28) == Equals(28)
@@ -254,6 +257,7 @@ def test_equality_across_different_classes():
 
 # ====================== Edge Cases ======================
 
+
 def test_with_none_values():
     assert Equals(None).evaluate(None) is True
     assert NotEquals(None).evaluate(None) is False
@@ -271,5 +275,4 @@ def test_comparison_with_different_types():
 def test_empty_string_handling():
     assert Equals("").evaluate("") is True
     assert NotEquals("").evaluate("") is False
-    assert GreaterThan("").evaluate("a") is True   
-
+    assert GreaterThan("").evaluate("a") is True

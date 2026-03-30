@@ -14,21 +14,17 @@ class Equals(Predicate):
         return value == self.expected
 
     def to_dict(self):
-        return {
-            "type": self._type,
-            "expected": self.expected
-        }
+        return {"type": self._type, "expected": self.expected}
 
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["expected"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return self.expected == other.expected
 
+        return self.expected == other.expected
 
 
 @Predicate.register("not_equals")
@@ -41,7 +37,7 @@ class NotEquals(Predicate):
     def evaluate(self, value):
         if type(value) is not type(self.expected):
             return True
-        
+
         return value != self.expected
 
     def to_dict(self):
@@ -54,7 +50,7 @@ class NotEquals(Predicate):
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.expected == other.expected
 
 
@@ -76,13 +72,12 @@ class GreaterThan(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["threshold"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return self.threshold == other.threshold
 
+        return self.threshold == other.threshold
 
 
 @Predicate.register("gte")
@@ -103,11 +98,11 @@ class GreaterThanOrEqual(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["threshold"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.threshold == other.threshold
 
 
@@ -129,13 +124,12 @@ class LessThan(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["threshold"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.threshold == other.threshold
-    
 
 
 @Predicate.register("lte")
@@ -156,9 +150,9 @@ class LessThanOrEqual(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["threshold"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.threshold == other.threshold

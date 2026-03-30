@@ -25,7 +25,9 @@ def sample_data():
         "nested_dict": {"key": "value"},
     }
 
+
 # ====================== AnyRule Tests ======================
+
 
 def test_any_rule_success(sample_data):
     """At least one item matches the predicate."""
@@ -41,7 +43,7 @@ def test_any_rule_no_match(sample_data):
 
 def test_any_rule_with_numbers(sample_data):
     rule = Field("scores").any(GreaterThan(25))
-    assert rule.evaluate(sample_data) is True   # 30 > 25
+    assert rule.evaluate(sample_data) is True  # 30 > 25
 
 
 def test_any_rule_all_fail(sample_data):
@@ -86,6 +88,7 @@ def test_any_rule_with_set(sample_data):
 
 # ====================== AllRule Tests ======================
 
+
 def test_all_rule_success(sample_data):
     """All items match the predicate."""
     rule = Field("scores").all(GreaterThan(5))
@@ -95,7 +98,7 @@ def test_all_rule_success(sample_data):
 def test_all_rule_partial_match(sample_data):
     """Not all items match → False."""
     rule = Field("scores").all(GreaterThan(15))
-    assert rule.evaluate(sample_data) is False   # 10 is not > 15
+    assert rule.evaluate(sample_data) is False  # 10 is not > 15
 
 
 def test_all_rule_empty_collection(sample_data):
@@ -121,7 +124,7 @@ def test_all_rule_with_strings(sample_data):
 
 
 def test_all_rule_single_item(sample_data):
-    rule = Field("single_tuple").all(Equals(1))   # only first item is 1, others fail
+    rule = Field("single_tuple").all(Equals(1))  # only first item is 1, others fail
     assert rule.evaluate(sample_data) is False
 
     rule2 = Field("single_tuple").all(GreaterThan(0))
@@ -130,13 +133,14 @@ def test_all_rule_single_item(sample_data):
 
 # ====================== Serialization ======================
 
+
 def test_any_rule_serialization_roundtrip(sample_data):
     original = Field("tags").any(Contains("ai"))
 
     d = original.to_dict()
     assert d["type"] == "AnyRule"
     assert d["field"] == "tags"
-    assert d["predicate"]["type"] == "contains"   # assuming contains has type
+    assert d["predicate"]["type"] == "contains"  # assuming contains has type
 
     loaded = Rule.from_dict(d)
     assert isinstance(loaded, AnyRule)
@@ -154,6 +158,7 @@ def test_all_rule_serialization_roundtrip(sample_data):
 
 
 # ====================== Equality ======================
+
 
 def test_any_rule_equality():
     p1 = Contains("ai")
@@ -173,6 +178,7 @@ def test_all_rule_equality():
 
 
 # ====================== Parametrized Tests ======================
+
 
 @pytest.mark.parametrize(
     "rule_builder, expected",

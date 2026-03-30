@@ -11,15 +11,12 @@ def sample_data():
         "name": "Abel",
         "tags": ["python", "ai"],
         "scores": [10, 20, 30],
-        "profile": {
-            "email": "test@example.com"
-        }
+        "profile": {"email": "test@example.com"},
     }
 
 
-
-
 # ====================== REGISTRY & DISCOVERY TESTS ======================
+
 
 def test_rule_registry_is_not_empty_after_discovery():
     Rule._discover_rules()
@@ -35,8 +32,10 @@ def test_register_decorator_works():
     class TempRule(Rule):
         def evaluate(self, data):
             return True
+
         def to_dict(self):
             return {"type": "test_temp_rule"}
+
         @classmethod
         def _from_dict_impl(cls, data):
             return cls()
@@ -48,12 +47,9 @@ def test_register_decorator_works():
     Rule._registry.pop("test_temp_rule", None)
 
 
-
 def test_unknown_rule_type_raises_clear_error():
     with pytest.raises(ValueError, match="Unknown rule type: NonExistentRule"):
         Rule.from_dict({"type": "NonExistentRule"})
-
-
 
 
 def test_and_rule(sample_data):
@@ -76,7 +72,7 @@ def test_logical_short_circuit():
     # AND should stop at the first False
     p_true = Field("a") == 1
     p_false = Field("b") == 2
-    
+
     # These trigger 'all()' and 'any()' logic deeper
     assert (p_true | p_false).evaluate({"a": 1}) is True
     assert (p_false & p_true).evaluate({"b": 3}) is False

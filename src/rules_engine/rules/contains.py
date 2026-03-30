@@ -25,7 +25,7 @@ class ContainsRule(Rule):
     value: Any
     """The value to look for inside the field."""
 
-    def evaluate(self, data: Any) ->  bool:
+    def evaluate(self, data: Any) -> bool:
         """Evaluate whether the field contains the specified value.
 
         Returns:
@@ -47,21 +47,18 @@ class ContainsRule(Rule):
         return {"type": self._type, "field": self.field_name, "value": self.value}
 
     @classmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'ContainsRule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "ContainsRule":
         """Deserialize from dictionary representation."""
 
         return cls(field_name=data["field"], value=data["value"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return (
-            self.field_name == other.field_name and
-            self.value == other.value
-        )
+
+        return self.field_name == other.field_name and self.value == other.value
 
     def __repr__(self) -> str:
         """Return a readable representation showing Field.contains() syntax."""
-        
+
         return f"Field({self.field_name!r}).contains({self.value!r})"

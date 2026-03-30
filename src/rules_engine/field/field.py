@@ -18,10 +18,10 @@ class Field:
 
     Examples:
         >>> from rules_engine import Field
-        >>> 
+        >>>
         >>> age = Field("age")
         >>> rule = (age >= 18) & (Field("role") == "admin")
-        >>> 
+        >>>
         >>> profile_age = Field("profile.age")
     """
 
@@ -29,41 +29,41 @@ class Field:
     """The name of the field, supporting dot notation for nested access 
     (e.g. 'profile.age')."""
 
-    def __eq__(self, value: Any) -> 'ComparisonRule':
+    def __eq__(self, value: Any) -> "ComparisonRule":
         """Return a rule that checks if this field equals the given value."""
         return ComparisonRule(self.name, "==", value)
 
-    def __ne__(self, value: Any) -> 'ComparisonRule':
+    def __ne__(self, value: Any) -> "ComparisonRule":
         """Return a rule that checks if this field is not equal to the given value."""
         return ComparisonRule(self.name, "!=", value)
 
-    def __gt__(self, value: Any) -> 'ComparisonRule':
+    def __gt__(self, value: Any) -> "ComparisonRule":
         """Return a rule that checks if this field is greater than the given value."""
         return ComparisonRule(self.name, ">", value)
 
-    def __ge__(self, value: Any) -> 'ComparisonRule':
-        """Return a rule that checks if this field is greater than or equal 
+    def __ge__(self, value: Any) -> "ComparisonRule":
+        """Return a rule that checks if this field is greater than or equal
         to the given value."""
         return ComparisonRule(self.name, ">=", value)
 
-    def __lt__(self, value: Any) -> 'ComparisonRule':
+    def __lt__(self, value: Any) -> "ComparisonRule":
         """Return a rule that checks if this field is less than the given value."""
         return ComparisonRule(self.name, "<", value)
 
-    def __le__(self, value: Any) -> 'ComparisonRule':
-        """Return a rule that checks if this field is less than or equal 
+    def __le__(self, value: Any) -> "ComparisonRule":
+        """Return a rule that checks if this field is less than or equal
         to the given value."""
         return ComparisonRule(self.name, "<=", value)
 
     # Predicate methods
-    def contains(self, value: Any) -> 'ContainsRule':
+    def contains(self, value: Any) -> "ContainsRule":
         """Return a rule that checks if this field contains the given value.
 
         Works with strings and collections.
         """
         return ContainsRule(self.name, value)
 
-    def len(self) -> 'LengthProxy':
+    def len(self) -> "LengthProxy":
         """Return a proxy object to compare the length of this field.
 
         Example:
@@ -71,8 +71,8 @@ class Field:
         """
         return LengthProxy(self.name)
 
-    def any(self, predicate: Predicate) -> 'AnyRule':
-        """Return a rule that checks if ANY item in the collection 
+    def any(self, predicate: Predicate) -> "AnyRule":
+        """Return a rule that checks if ANY item in the collection
         satisfies the predicate.
 
         Args:
@@ -83,25 +83,24 @@ class Field:
         """
         return AnyRule(self.name, predicate)
 
-    def all(self, predicate: Predicate) -> 'AllRule':
-        """Return a rule that checks if ALL items in the collection 
+    def all(self, predicate: Predicate) -> "AllRule":
+        """Return a rule that checks if ALL items in the collection
         satisfy the predicate."""
         return AllRule(self.name, predicate)
 
-    def startswith(self, prefix: str) -> 'StartsWithRule':
-        """Return a rule that checks if this field starts with 
+    def startswith(self, prefix: str) -> "StartsWithRule":
+        """Return a rule that checks if this field starts with
         the given prefix (string only)."""
         return StartsWithRule(self.name, prefix)
-    
-    def endswith(self, suffix: str) -> 'StartsWithRule':
+
+    def endswith(self, suffix: str) -> "StartsWithRule":
         """Return a rule that checks if this field ends with
         the given suffix (string only)."""
         return EndsWithRule(self.name, suffix)
 
-    def matches(self, pattern: Union[str, Pattern]) -> 'RegexMatchRule':
+    def matches(self, pattern: Union[str, Pattern]) -> "RegexMatchRule":
         """Return a rule that checks if this field matches the given regex pattern."""
         return RegexMatchRule(self.name, pattern)
-
 
 
 @dataclass
@@ -114,23 +113,20 @@ class LengthProxy:
     field_name: str
     """Name of the field whose length is being compared."""
 
-    def __gt__(self, n: int) -> LengthComparisonRule:  
+    def __gt__(self, n: int) -> LengthComparisonRule:
         return LengthComparisonRule(self.field_name, ">", n)
-    
-    def __ge__(self, n: int) -> LengthComparisonRule:  
+
+    def __ge__(self, n: int) -> LengthComparisonRule:
         return LengthComparisonRule(self.field_name, ">=", n)
-    
-    def __lt__(self, n: int) -> LengthComparisonRule:  
+
+    def __lt__(self, n: int) -> LengthComparisonRule:
         return LengthComparisonRule(self.field_name, "<", n)
-    
-    def __le__(self, n: int) -> LengthComparisonRule:  
+
+    def __le__(self, n: int) -> LengthComparisonRule:
         return LengthComparisonRule(self.field_name, "<=", n)
-    
-    def __eq__(self, n: int) -> LengthComparisonRule:  
+
+    def __eq__(self, n: int) -> LengthComparisonRule:
         return LengthComparisonRule(self.field_name, "==", n)
-    
-    def __ne__(self, n: int) -> LengthComparisonRule:  
+
+    def __ne__(self, n: int) -> LengthComparisonRule:
         return LengthComparisonRule(self.field_name, "!=", n)
-
-
-

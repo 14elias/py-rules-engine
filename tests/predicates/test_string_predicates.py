@@ -7,6 +7,7 @@ from rules_engine.predicates.base import Predicate
 
 # ====================== Fixture for Predicates ======================
 
+
 @pytest.fixture
 def sample_value():
     """Simple fixture with common values to test predicates against."""
@@ -23,6 +24,7 @@ def sample_value():
 
 # ====================== Regex Predicate ======================
 
+
 def test_regex_basic_match(sample_value):
     pred = Regex(r"^Abel$")
     assert pred.evaluate(sample_value["name"]) is True
@@ -34,8 +36,8 @@ def test_regex_partial_match(sample_value):
 
 
 def test_regex_case_sensitive(sample_value):
-    pred = Regex(r"abel")                    # lowercase
-    assert pred.evaluate(sample_value["name"]) is False   # 'Abel' does not match
+    pred = Regex(r"abel")  # lowercase
+    assert pred.evaluate(sample_value["name"]) is False  # 'Abel' does not match
 
 
 def test_regex_with_word_boundary(sample_value):
@@ -85,13 +87,14 @@ def test_regex_serialization():
 
 # ====================== StartsWith Predicate ======================
 
+
 def test_startswith_success(sample_value):
     pred = StartsWith("Ab")
     assert pred.evaluate(sample_value["name"]) is True
 
 
 def test_startswith_case_sensitive(sample_value):
-    pred = StartsWith("abel")          # lowercase
+    pred = StartsWith("abel")  # lowercase
     assert pred.evaluate(sample_value["name"]) is False
 
 
@@ -122,13 +125,14 @@ def test_startswith_serialization():
 
 # ====================== EndsWith Predicate ======================
 
+
 def test_endswith_success(sample_value):
     pred = EndsWith("com")
     assert pred.evaluate(sample_value["email"]) is True
 
 
 def test_endswith_case_sensitive(sample_value):
-    pred = EndsWith("Com")             # wrong case
+    pred = EndsWith("Com")  # wrong case
     assert pred.evaluate(sample_value["email"]) is False
 
 
@@ -158,6 +162,7 @@ def test_endswith_serialization():
 
 # ====================== Equality Tests ======================
 
+
 def test_predicate_equality():
     p1 = StartsWith("Ab")
     p2 = StartsWith("Ab")
@@ -178,6 +183,7 @@ def test_regex_equality():
 
 
 # ====================== Parametrized Tests ======================
+
 
 @pytest.mark.parametrize(
     "predicate, value, expected",

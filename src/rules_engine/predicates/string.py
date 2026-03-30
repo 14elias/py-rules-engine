@@ -18,29 +18,24 @@ class Regex(Predicate):
     def evaluate(self, value):
         if not isinstance(value, str):
             return False
-        
+
         try:
             return re.search(self.pattern, value) is not None
         except re.error:
             return False
 
     def to_dict(self):
-        return {
-            "type": self._type,
-            "pattern": self.pattern
-        }
+        return {"type": self._type, "pattern": self.pattern}
 
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["pattern"])
-
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
 
         return self.pattern == other.pattern
-    
 
 
 @Predicate.register("startswith")
@@ -53,10 +48,10 @@ class StartsWith(Predicate):
     def evaluate(self, value):
         if not isinstance(value, str):
             return False
-        
-        if not isinstance(self.prefix, str):    # optional: be strict
+
+        if not isinstance(self.prefix, str):  # optional: be strict
             return False
-        
+
         return value.startswith(self.prefix)
 
     def to_dict(self):
@@ -66,29 +61,27 @@ class StartsWith(Predicate):
     def _from_dict_impl(cls, data):
         return cls(data["prefix"])
 
-
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
 
         return self.prefix == other.prefix
-    
 
 
 @Predicate.register("endswith")
 class EndsWith(Predicate):
     """Predicate that checks if a string ends with a given suffix."""
-    
+
     def __init__(self, suffix):
         self.suffix = suffix
 
     def evaluate(self, value):
         if not isinstance(value, str):
             return False
-        
-        if not isinstance(self.suffix, str):    # optional: be strict
+
+        if not isinstance(self.suffix, str):  # optional: be strict
             return False
-        
+
         return value.endswith(self.suffix)
 
     def to_dict(self):
@@ -97,7 +90,6 @@ class EndsWith(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["suffix"])
-    
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):

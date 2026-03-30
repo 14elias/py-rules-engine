@@ -38,25 +38,21 @@ class StartsWithRule(Rule):
         return {"type": self._type, "field": self.field_name, "prefix": self.prefix}
 
     @classmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'StartsWithRule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "StartsWithRule":
         """Deserialize from dictionary."""
 
         return cls(field_name=data["field"], prefix=data["prefix"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return (
-            self.field_name == other.field_name and
-            self.prefix == other.prefix
-        )
+
+        return self.field_name == other.field_name and self.prefix == other.prefix
 
     def __repr__(self) -> str:
         """Return a readable representation using Field.startswith() syntax."""
 
         return f"Field({self.field_name!r}).startswith({self.prefix!r})"
-
 
 
 @Rule.register("EndsWithRule")
@@ -67,6 +63,7 @@ class EndsWithRule(Rule):
     Example:
         Field("filename").endswith(".pdf")
     """
+
     field_name: str
     """Name of the field to check."""
 
@@ -90,19 +87,16 @@ class EndsWithRule(Rule):
         return {"type": self._type, "field": self.field_name, "suffix": self.suffix}
 
     @classmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'EndsWithRule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "EndsWithRule":
         """Deserialize from dictionary."""
 
         return cls(field_name=data["field"], suffix=data["suffix"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return (
-            self.field_name == other.field_name and
-            self.suffix == other.suffix
-        )
+
+        return self.field_name == other.field_name and self.suffix == other.suffix
 
     def __repr__(self) -> str:
         """Return a readable representation using Field.endswith() syntax."""
@@ -126,7 +120,7 @@ class RegexMatchRule(Rule):
 
     pattern: Union[str, Pattern]
     """The regex pattern (string or pre-compiled Pattern object)."""
-    
+
     def __post_init__(self):
         if isinstance(self.pattern, str):
             object.__setattr__(self, "pattern", re.compile(self.pattern))
@@ -157,29 +151,28 @@ class RegexMatchRule(Rule):
         }
 
     @classmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'RegexMatchRule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "RegexMatchRule":
         """Deserialize from dictionary."""
 
         return cls(field_name=data["field"], pattern=data["pattern"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         self_p = None
         other_p = None
 
         if hasattr(self.pattern, "pattern"):
-            self_p = self.pattern.pattern 
-        else: 
+            self_p = self.pattern.pattern
+        else:
             self_p = self.pattern
 
-
         if hasattr(other.pattern, "pattern"):
-            other_p = other.pattern.pattern 
-        else: 
+            other_p = other.pattern.pattern
+        else:
             other_p = other.pattern
-        
+
         return self.field_name == other.field_name and self_p == other_p
 
     def __repr__(self) -> str:

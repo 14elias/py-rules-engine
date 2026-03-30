@@ -34,16 +34,12 @@ class AndRule(Rule):
             Rule.from_dict(data["left"]),
             Rule.from_dict(data["right"]),
         )
-    
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return (
-            self.left == other.left and
-            self.right == other.right
-        )
+
+        return self.left == other.left and self.right == other.right
 
 
 @Rule.register("OrRule")
@@ -76,16 +72,12 @@ class OrRule(Rule):
             Rule.from_dict(data["left"]),
             Rule.from_dict(data["right"]),
         )
-    
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return (
-            self.left == other.left and
-            self.right == other.right
-        )
+
+        return self.left == other.left and self.right == other.right
 
 
 @Rule.register("NotRule")
@@ -107,13 +99,13 @@ class NotRule(Rule):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(Rule.from_dict(data["child"]))
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.child == other.child
-    
+
 
 @Rule.register("ParenRule")
 @dataclass(frozen=True)
@@ -123,7 +115,7 @@ class ParenRule(Rule):
     This rule simply delegates evaluation and serialization to its child.
     Mainly useful for preserving structure during serialization/deserialization.
     """
-    
+
     child: Rule
 
     def evaluate(self, data: Any) -> bool:
@@ -136,13 +128,13 @@ class ParenRule(Rule):
         }
 
     @classmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'ParenRule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "ParenRule":
         return cls(child=Rule.from_dict(data["child"]))
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.child == other.child
 
     def __repr__(self) -> str:

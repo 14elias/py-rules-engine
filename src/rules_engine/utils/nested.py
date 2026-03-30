@@ -12,10 +12,10 @@ def get_nested(data: Any, path: str, default: Any = None) -> Any:
     Returns:
         The value at the specified path, or `default` if not found.
     """
-    
+
     if not isinstance(path, str):
         return default
-    
+
     if not path:
         return data
 

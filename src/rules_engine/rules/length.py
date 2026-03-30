@@ -30,7 +30,7 @@ class LengthComparisonRule(Rule):
         """Evaluate the length comparison.
 
         Note:
-            Returns False if the field is missing, None, or not a 
+            Returns False if the field is missing, None, or not a
             sized collection/string.
         """
 
@@ -42,17 +42,17 @@ class LengthComparisonRule(Rule):
         except TypeError:
             return False
 
-        if self.operator == "==": 
+        if self.operator == "==":
             return actual_len == self.length
-        if self.operator == "!=": 
+        if self.operator == "!=":
             return actual_len != self.length
-        if self.operator == ">":  
+        if self.operator == ">":
             return actual_len > self.length
-        if self.operator == ">=": 
+        if self.operator == ">=":
             return actual_len >= self.length
-        if self.operator == "<":  
+        if self.operator == "<":
             return actual_len < self.length
-        if self.operator == "<=": 
+        if self.operator == "<=":
             return actual_len <= self.length
         return False
 
@@ -67,7 +67,7 @@ class LengthComparisonRule(Rule):
         }
 
     @classmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'LengthComparisonRule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "LengthComparisonRule":
         """Deserialize from dictionary."""
 
         return cls(
@@ -75,15 +75,15 @@ class LengthComparisonRule(Rule):
             operator=data["op"],
             length=data["length"],
         )
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return (
-            self.field_name == other.field_name and
-            self.operator == other.operator and
-            self.length == other.length
+            self.field_name == other.field_name
+            and self.operator == other.operator
+            and self.length == other.length
         )
 
     def __repr__(self) -> str:

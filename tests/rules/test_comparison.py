@@ -24,7 +24,9 @@ def sample_data():
         "nested_dict": {"key": "value"},
     }
 
+
 # ====================== Basic Comparisons ======================
+
 
 def test_greater_than(sample_data):
     rule = Field("age") > 20
@@ -63,6 +65,7 @@ def test_equal_with_string(sample_data):
 
 # ====================== Edge Cases ======================
 
+
 def test_comparison_missing_field(sample_data):
     rule = Field("non.existent.field") == 100
     assert rule.evaluate(sample_data) is False
@@ -75,9 +78,9 @@ def test_comparison_field_is_none(sample_data):
 
 def test_comparison_type_mismatch(sample_data):
     """Different types should return False (as per your implementation)."""
-    rule1 = Field("age") > "25"          # int vs str
-    rule2 = Field("name") == 123         # str vs int
-    rule3 = Field("age") == "25"         # int vs str
+    rule1 = Field("age") > "25"  # int vs str
+    rule2 = Field("name") == 123  # str vs int
+    rule3 = Field("age") == "25"  # int vs str
 
     assert rule1.evaluate(sample_data) is False
     assert rule2.evaluate(sample_data) is False
@@ -100,6 +103,7 @@ def test_comparison_empty_string(sample_data):
 
 # ====================== Unsupported Operator ======================
 
+
 def test_unsupported_operator_raises(sample_data):
     """Unknown operator should raise ValueError (as implemented)."""
     rule = ComparisonRule(field_name="age", operator="~~", value=10)
@@ -109,6 +113,7 @@ def test_unsupported_operator_raises(sample_data):
 
 
 # ====================== Serialization ======================
+
 
 def test_comparison_serialization_roundtrip(sample_data):
     original = Field("age") >= 25
@@ -133,6 +138,7 @@ def test_comparison_serialization_string(sample_data):
 
 
 # ====================== Equality & Repr ======================
+
 
 def test_comparison_equality():
     r1 = Field("age") == 25
@@ -159,6 +165,7 @@ def test_comparison_repr(sample_data):
 
 # ====================== Parametrized Tests ======================
 
+
 @pytest.mark.parametrize(
     "field, operator, value, expected",
     [
@@ -171,7 +178,7 @@ def test_comparison_repr(sample_data):
         ("country", "==", "US", True),
         ("country", "!=", "ET", True),
         ("name", "==", "Abel", True),
-        ("scores", "==", [10, 20, 30], True),   
+        ("scores", "==", [10, 20, 30], True),
         ("profile.none_value", "==", None, False),
         ("empty_string", "==", "", True),
         ("missing.field", ">", 10, False),

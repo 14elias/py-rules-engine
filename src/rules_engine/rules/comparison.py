@@ -33,7 +33,7 @@ class ComparisonRule(Rule):
 
         Note:
             - Returns False if the field is missing or None.
-            - Returns False if the actual value and comparison value 
+            - Returns False if the actual value and comparison value
             have different types.
         """
 
@@ -43,17 +43,17 @@ class ComparisonRule(Rule):
         if type(actual) is not type(self.value):
             return False
 
-        if self.operator == "==": 
+        if self.operator == "==":
             return actual == self.value
-        if self.operator == "!=": 
+        if self.operator == "!=":
             return actual != self.value
-        if self.operator == ">":  
+        if self.operator == ">":
             return actual > self.value
-        if self.operator == ">=": 
+        if self.operator == ">=":
             return actual >= self.value
-        if self.operator == "<":  
+        if self.operator == "<":
             return actual < self.value
-        if self.operator == "<=": 
+        if self.operator == "<=":
             return actual <= self.value
         raise ValueError(f"Unknown operator: {self.operator}")
 
@@ -68,7 +68,7 @@ class ComparisonRule(Rule):
         }
 
     @classmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'ComparisonRule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "ComparisonRule":
         """Deserialize from dictionary representation."""
 
         return cls(
@@ -76,17 +76,16 @@ class ComparisonRule(Rule):
             operator=data["op"],
             value=data["value"],
         )
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
 
         return (
-            self.field_name == other.field_name and
-            self.operator == other.operator and
-            self.value == other.value
+            self.field_name == other.field_name
+            and self.operator == other.operator
+            and self.value == other.value
         )
-        
 
     def __repr__(self) -> str:
         """Return a readable string representation of the rule."""

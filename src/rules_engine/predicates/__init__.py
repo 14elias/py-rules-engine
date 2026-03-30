@@ -12,7 +12,7 @@ from .string import EndsWith, Regex, StartsWith
 
 __all__ = [
     "Contains",
-    "Equals", 
+    "Equals",
     "Regex",
     "In",
     "LengthEquals",
@@ -27,5 +27,5 @@ __all__ = [
     "EndsWith",
     "And",
     "Or",
-    "Not"
+    "Not",
 ]

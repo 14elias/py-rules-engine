@@ -12,19 +12,16 @@ class Contains(Predicate):
         return self.item in value
 
     def to_dict(self):
-        return {
-            "type": self._type,
-            "item": self.item
-        }
+        return {"type": self._type, "item": self.item}
 
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["item"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.item == other.item
 
 
@@ -44,13 +41,12 @@ class In(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["options"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.options == other.options
-    
 
 
 @Predicate.register("len_eq")
@@ -69,13 +65,12 @@ class LengthEquals(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["length"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.length == other.length
-    
 
 
 @Predicate.register("len_gt")
@@ -94,19 +89,18 @@ class LengthGreaterThan(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["length"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
-        return self.length == other.length
 
+        return self.length == other.length
 
 
 @Predicate.register("len_lt")
 class LengthLessThan(Predicate):
     """Predicate that checks if the length of a value is less than a number."""
-    
+
     def __init__(self, length):
         self.length = length
 
@@ -119,9 +113,9 @@ class LengthLessThan(Predicate):
     @classmethod
     def _from_dict_impl(cls, data):
         return cls(data["length"])
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.length == other.length

@@ -18,20 +18,21 @@ class Rule(ABC):
       - Composition using Python operators: `&` (AND), `|` (OR), `~` (NOT)
     """
 
-    _registry: ClassVar[Dict[str, Type['Rule']]] = {}
+    _registry: ClassVar[Dict[str, Type["Rule"]]] = {}
 
     @classmethod
     def register(cls, name: str):
         """Decorator to register a rule class in the global registry.
 
-        This enables proper deserialization via `Rule.from_dict()` and 
+        This enables proper deserialization via `Rule.from_dict()` and
         `Rule.from_json()`.
         """
 
-        def wrapper(subclass: Type['Rule']):
+        def wrapper(subclass: Type["Rule"]):
             cls._registry[name] = subclass
             subclass._type = name
             return subclass
+
         return wrapper
 
     @abstractmethod
@@ -54,7 +55,7 @@ class Rule(ABC):
         pass
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Rule':
+    def from_dict(cls, data: Dict[str, Any]) -> "Rule":
         """Reconstruct a Rule instance from its dictionary representation.
 
         This method automatically discovers registered rule types if needed.
@@ -65,18 +66,16 @@ class Rule(ABC):
 
         if not isinstance(data, dict) or "type" not in data:
             raise ValueError("Rule data must be a dict with 'type' key")
-        
+
         if not cls._registry:
             cls._discover_rules()
 
         rule_type = data["type"]
 
-
         if rule_type not in cls._registry:
-                raise ValueError(f"Unknown rule type: {rule_type}")
+            raise ValueError(f"Unknown rule type: {rule_type}")
         concrete_cls = cls._registry[rule_type]
         return concrete_cls._from_dict_impl(data)
-    
 
     @staticmethod
     def _discover_rules():
@@ -93,10 +92,9 @@ class Rule(ABC):
         for _, module_name, _ in pkgutil.iter_modules(rules_pkg.__path__):
             importlib.import_module(f"{package}.{module_name}")
 
-
     @classmethod
     @abstractmethod
-    def _from_dict_impl(cls, data: Dict[str, Any]) -> 'Rule':
+    def _from_dict_impl(cls, data: Dict[str, Any]) -> "Rule":
         """Internal method implemented by concrete rule classes for deserialization."""
 
         pass
@@ -107,27 +105,28 @@ class Rule(ABC):
         return json.dumps(self.to_dict(), indent=indent)
 
     @classmethod
-    def from_json(cls, json_str: str) -> 'Rule':
+    def from_json(cls, json_str: str) -> "Rule":
         """Reconstruct a Rule from a JSON string."""
 
         return cls.from_dict(json.loads(json_str))
 
-    def __and__(self, other: 'Rule'):
+    def __and__(self, other: "Rule"):
         """Combine this rule with another using logical AND."""
 
         from .combinators import AndRule
+
         return AndRule(self, other)
 
-    def __or__(self, other: 'Rule'):
+    def __or__(self, other: "Rule"):
         """Combine this rule with another using logical OR."""
 
         from .combinators import OrRule
+
         return OrRule(self, other)
 
     def __invert__(self):
         """Return the logical negation of this rule (NOT)."""
 
         from .combinators import NotRule
+
         return NotRule(self)
-    
-        

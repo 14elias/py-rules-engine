@@ -24,6 +24,7 @@ def sample_data():
 
 # ====================== Basic Functionality ======================
 
+
 def test_length_gt(sample_data):
     rule = Field("tags").len() > 1
     assert rule.evaluate(sample_data) is True
@@ -55,6 +56,7 @@ def test_length_ne(sample_data):
 
 
 # ====================== Edge Cases ======================
+
 
 def test_length_none_value(sample_data):
     """None should return False for all operators."""
@@ -99,9 +101,10 @@ def test_length_string(sample_data):
 
 # ====================== Invalid Types ======================
 
+
 def test_length_invalid_type_int(sample_data):
     rule = Field("age").len() > 1
-    assert rule.evaluate(sample_data) is False   # int has no len()
+    assert rule.evaluate(sample_data) is False  # int has no len()
 
 
 def test_length_invalid_type_none(sample_data):
@@ -110,12 +113,13 @@ def test_length_invalid_type_none(sample_data):
 
 
 def test_length_invalid_type_bool(sample_data):
-    rule = Field("active").len() >= 1   # if "active" key missing or bool
+    rule = Field("active").len() >= 1  # if "active" key missing or bool
     data = {"active": True}
     assert rule.evaluate(data) is False
 
 
 # ====================== Unsupported Operator ======================
+
 
 def test_length_unsupported_operator(sample_data):
     """Unknown operator should return False."""
@@ -124,6 +128,7 @@ def test_length_unsupported_operator(sample_data):
 
 
 # ====================== Serialization ======================
+
 
 def test_length_serialization_roundtrip(sample_data):
     original = Field("tags").len() >= 3
@@ -137,7 +142,7 @@ def test_length_serialization_roundtrip(sample_data):
     loaded = Rule.from_dict(d)
     assert isinstance(loaded, LengthComparisonRule)
     assert loaded == original
-    assert loaded.evaluate(sample_data) is True   # same result
+    assert loaded.evaluate(sample_data) is True  # same result
 
 
 def test_length_from_dict(sample_data):
@@ -152,6 +157,7 @@ def test_length_from_dict(sample_data):
 
 
 # ====================== Equality & Repr ======================
+
 
 def test_length_equality():
     r1 = Field("tags").len() == 3
@@ -173,6 +179,7 @@ def test_length_repr():
 
 # ====================== Parametrized Tests ======================
 
+
 @pytest.mark.parametrize(
     "field, operator, length, expected",
     [
@@ -185,7 +192,7 @@ def test_length_repr():
         ("profile.empty_list", "==", 0, True),
         ("profile.empty_list", ">", 0, False),
         ("bio", "==", 11, True),
-        ("age", "==", 5, False),           # invalid type
+        ("age", "==", 5, False),  # invalid type
         ("profile.none_field", "==", 0, False),
         ("missing.field", ">=", 1, False),
     ],

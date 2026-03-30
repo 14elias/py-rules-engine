@@ -64,7 +64,7 @@ def test_get_nested_list_as_value():
     """Test when a value in the path is a list (should stop and return default)."""
     data = {"a": [1, 2, 3]}
     assert get_nested(data, "a.b") is None
-    assert get_nested(data, "a.0") is None  
+    assert get_nested(data, "a.0") is None
     # even though lists support indexing, we treat as non-dict
 
 
@@ -92,8 +92,7 @@ def test_get_nested_mixed_types():
 def test_get_nested_invalid_path_types():
     """Test with non-string paths (should probably handle gracefully)."""
     data = {"a": 1}
-    assert get_nested(data, None) is None  
-    
+    assert get_nested(data, None) is None
 
 
 @pytest.mark.parametrize(

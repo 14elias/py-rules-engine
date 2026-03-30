@@ -23,7 +23,10 @@ def sample_data():
         "single_tuple": (1, 2, 3),
         "nested_dict": {"key": "value"},
     }
+
+
 # ====================== Basic Functionality ======================
+
 
 def test_contains_success(sample_data):
     rule = Field("tags").contains("python")
@@ -66,6 +69,7 @@ def test_contains_empty_string(sample_data):
 
 # ====================== Edge Cases & Failure Paths ======================
 
+
 def test_contains_none_value(sample_data):
     """None collection should return False."""
     rule = Field("profile.none_value").contains("anything")
@@ -106,8 +110,10 @@ def test_contains_dict_as_collection(sample_data):
 
 # ====================== TypeError Handling ======================
 
+
 def test_contains_type_error_handling():
     """Objects that raise TypeError on 'in' check should return False."""
+
     class NonIterable:
         def __contains__(self, item):
             raise TypeError("Not iterable")
@@ -118,6 +124,7 @@ def test_contains_type_error_handling():
 
 
 # ====================== Serialization ======================
+
 
 def test_contains_serialization_roundtrip(sample_data):
     original_rule = Field("tags").contains("python")
@@ -142,6 +149,7 @@ def test_contains_serialization_with_complex_value(sample_data):
 
 # ====================== Equality & Repr ======================
 
+
 def test_contains_equality():
     r1 = Field("tags").contains("python")
     r2 = Field("tags").contains("python")
@@ -155,7 +163,7 @@ def test_contains_equality():
 def test_contains_equality_with_different_types():
     r1 = Field("scores").contains(10)
     r2 = Field("scores").contains(10)
-    r3 = Field("scores").contains("10")   # different type
+    r3 = Field("scores").contains("10")  # different type
 
     assert r1 == r2
     assert r1 != r3
@@ -171,6 +179,7 @@ def test_contains_repr(sample_data):
 
 # ====================== Parametrized Tests ======================
 
+
 @pytest.mark.parametrize(
     "field, value, expected",
     [
@@ -181,7 +190,7 @@ def test_contains_repr(sample_data):
         ("profile.empty_list", "x", False),
         ("bio", "world", True),
         ("bio", "xyz", False),
-        ("age", 25, False),                    # non-iterable
+        ("age", 25, False),  # non-iterable
         ("profile.none_value", None, False),
         ("non.existent", "anything", False),
         ("nested_dict", "key", True),

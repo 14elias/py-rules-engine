@@ -11,6 +11,7 @@ from rules_engine.predicates.base import Predicate
 
 # ====================== HELPER FIXTURES ======================
 
+
 @pytest.fixture
 def sample_data():
     """Common test data for different types"""
@@ -27,6 +28,7 @@ def sample_data():
 
 # ====================== BASE SERIALIZATION TESTS ======================
 
+
 def test_predicate_registration():
     """Ensure all predicates are properly registered"""
     assert "contains" in Predicate._registry
@@ -37,6 +39,7 @@ def test_predicate_registration():
 
 
 # ====================== CONTAINS PREDICATE TESTS ======================
+
 
 class TestContains:
     def test_contains_string(self, sample_data):
@@ -61,7 +64,7 @@ class TestContains:
     def test_contains_not_iterable(self):
         pred = Contains("x")
         with pytest.raises(TypeError):
-            pred.evaluate(123)          # int is not iterable
+            pred.evaluate(123)  # int is not iterable
         with pytest.raises(TypeError):
             pred.evaluate(None)
 
@@ -88,6 +91,7 @@ class TestContains:
 
 
 # ====================== IN PREDICATE TESTS ======================
+
 
 class TestIn:
     def test_in_list(self, sample_data):
@@ -133,6 +137,7 @@ class TestIn:
 
 # ====================== LENGTH PREDICATES TESTS ======================
 
+
 class TestLengthEquals:
     def test_len_eq_list(self, sample_data):
         pred = LengthEquals(5)
@@ -141,7 +146,7 @@ class TestLengthEquals:
 
     def test_len_eq_string(self, sample_data):
         pred = LengthEquals(11)
-        assert pred.evaluate(sample_data["string"]) is True  
+        assert pred.evaluate(sample_data["string"]) is True
 
     def test_len_eq_empty(self, sample_data):
         pred = LengthEquals(0)
@@ -166,7 +171,7 @@ class TestLengthEquals:
 class TestLengthGreaterThan:
     def test_len_gt(self, sample_data):
         pred = LengthGreaterThan(3)
-        assert pred.evaluate(sample_data["list"]) is True      # len=5
+        assert pred.evaluate(sample_data["list"]) is True  # len=5
         assert pred.evaluate([1, 2]) is False
 
     def test_len_gt_string(self, sample_data):
@@ -188,7 +193,7 @@ class TestLengthGreaterThan:
 class TestLengthLessThan:
     def test_len_lt(self, sample_data):
         pred = LengthLessThan(10)
-        assert pred.evaluate(sample_data["list"]) is True      # 5 < 10
+        assert pred.evaluate(sample_data["list"]) is True  # 5 < 10
         assert pred.evaluate([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) is False
 
     def test_len_lt_empty(self, sample_data):
@@ -210,12 +215,13 @@ class TestLengthLessThan:
 
 # ====================== EDGE CASES & ERROR HANDLING ======================
 
+
 def test_length_predicates_with_non_sized_objects():
     """Test behavior when value has no __len__"""
     for Pred in (LengthEquals, LengthGreaterThan, LengthLessThan):
         pred = Pred(5)
         with pytest.raises(TypeError):
-            pred.evaluate(123)           # int has no len()
+            pred.evaluate(123)  # int has no len()
         with pytest.raises(TypeError):
             pred.evaluate(None)
         with pytest.raises(TypeError):
@@ -237,7 +243,7 @@ def test_serialization_roundtrip():
         reconstructed = Predicate.from_dict(data)
 
         array = [1, 2, 3, 4, 5]
-        
+
         assert isinstance(reconstructed, original.__class__)
         assert reconstructed == original
         # Also test that evaluate still works the same
@@ -250,10 +256,10 @@ def test_invalid_from_dict():
         Predicate.from_dict({"type": "contains"})  # missing "item"
 
     with pytest.raises(KeyError):
-        Predicate.from_dict({"type": "in"})        # missing "options"
+        Predicate.from_dict({"type": "in"})  # missing "options"
 
     with pytest.raises(KeyError):
-        Predicate.from_dict({"type": "len_eq"})    # missing "length"
+        Predicate.from_dict({"type": "len_eq"})  # missing "length"
 
 
 def test_unknown_predicate_type():

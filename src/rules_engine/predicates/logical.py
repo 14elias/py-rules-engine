@@ -16,9 +16,8 @@ class And(Predicate):
                     f"All arguments to And() must be Predicate instances. "
                     f"Got {type(p).__name__} at position {i}."
                 )
-        
-        self.predicates = predicates
 
+        self.predicates = predicates
 
     def evaluate(self, value):
         return all(p.evaluate(value) for p in self.predicates)
@@ -26,25 +25,26 @@ class And(Predicate):
     def to_dict(self):
         return {
             "type": self._type,
-            "predicates": [p.to_dict() for p in self.predicates]
+            "predicates": [p.to_dict() for p in self.predicates],
         }
 
     @classmethod
     def _from_dict_impl(cls, data):
         from rules_engine.predicates.base import Predicate
+
         return cls(*[Predicate.from_dict(p) for p in data["predicates"]])
-    
+
     def __eq__(self, other: object) -> bool:
         # 1. Check if the 'other' object is even the same type
         if not isinstance(other, self.__class__):
             return False
-        
+
         # 2. Check if they have the same number of child predicates
         if len(self.predicates) != len(other.predicates):
             return False
-        
+
         # 3. Compare each child predicate in order
-        # This relies on each child predicate (e.g., Comparison) 
+        # This relies on each child predicate (e.g., Comparison)
         # also having its own __eq__ implemented.
         return all(p1 == p2 for p1, p2 in zip(self.predicates, other.predicates))
 
@@ -64,7 +64,7 @@ class Or(Predicate):
                     f"All arguments to Or() must be Predicate instances. "
                     f"Got {type(p).__name__} at position {i}."
                 )
-        
+
         self.predicates = predicates
 
     def evaluate(self, value):
@@ -73,36 +73,34 @@ class Or(Predicate):
     def to_dict(self):
         return {
             "type": self._type,
-            "predicates": [p.to_dict() for p in self.predicates]
+            "predicates": [p.to_dict() for p in self.predicates],
         }
 
     @classmethod
     def _from_dict_impl(cls, data):
         from rules_engine.predicates.base import Predicate
+
         return cls(*[Predicate.from_dict(p) for p in data["predicates"]])
-    
 
     def __eq__(self, other: object) -> bool:
         # 1. Check if the 'other' object is even the same type
         if not isinstance(other, self.__class__):
             return False
-        
+
         # 2. Check if they have the same number of child predicates
         if len(self.predicates) != len(other.predicates):
             return False
-        
+
         # 3. Compare each child predicate in order
-        # This relies on each child predicate (e.g., Comparison) 
+        # This relies on each child predicate (e.g., Comparison)
         # also having its own __eq__ implemented.
         return all(p1 == p2 for p1, p2 in zip(self.predicates, other.predicates))
-
-
 
 
 @Predicate.register("not")
 class Not(Predicate):
     """Logical NOT predicate that inverts the result of a child predicate."""
-    
+
     def __init__(self, predicate):
         if not isinstance(predicate, Predicate):
             raise TypeError(
@@ -115,19 +113,16 @@ class Not(Predicate):
         return not self.predicate.evaluate(value)
 
     def to_dict(self):
-        return {
-            "type": self._type,
-            "predicate": self.predicate.to_dict()
-        }
+        return {"type": self._type, "predicate": self.predicate.to_dict()}
 
     @classmethod
     def _from_dict_impl(cls, data):
         from rules_engine.predicates.base import Predicate
+
         return cls(Predicate.from_dict(data["predicate"]))
-    
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
-        
+
         return self.predicate == other.predicate
