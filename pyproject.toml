@@ -1,5 +1,5 @@
 [project]
-name = "rules-engine"
+name = "py-rules-engine"
 version = "0.1.0"
 description = "Composable, Pythonic business rules and validation engine with expression trees"
 readme = "README.md"
