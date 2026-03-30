@@ -1,10 +1,14 @@
 import pytest
+
 from rules_engine.predicates import (
-    Equals, NotEquals, GreaterThan, GreaterThanOrEqual,
-    LessThan, LessThanOrEqual
+    Equals,
+    GreaterThan,
+    GreaterThanOrEqual,
+    LessThan,
+    LessThanOrEqual,
+    NotEquals,
 )
 from rules_engine.predicates.base import Predicate
-
 
 # ====================== Fixtures ======================
 
@@ -68,7 +72,16 @@ class TestEquals:
     ])
     def test_equals_edge_values(self, sample_value, value, expected):
         pred = Equals(value)
-        key = "none_value" if value is None else "false_bool" if value is False else "zero" if value == 0 else "empty_str"
+
+        key = ''
+        if value is None:
+            key = "none_value"
+        elif value is False:
+            key = "false_bool"
+        elif value == 0 :
+            key = "zero"
+        else:
+            key = "empty_str"
         assert pred.evaluate(sample_value[key]) is expected
 
 
@@ -193,7 +206,7 @@ class TestLessThanOrEqual:
         (LessThanOrEqual, 25, 28, False),
     ],
 )
-def test_comparison_predicates_parametrized(predicate_cls, threshold, test_value, expected):
+def test_comparison_predicates_param(predicate_cls, threshold, test_value, expected):
     pred = predicate_cls(threshold)
     assert pred.evaluate(test_value) is expected
 

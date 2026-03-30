@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any, Dict
+
 from .base import Rule
+
 
 @Rule.register("AndRule")
 @dataclass(frozen=True)

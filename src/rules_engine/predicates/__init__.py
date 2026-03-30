@@ -1,30 +1,14 @@
-from .collection import(
-    Contains,
-    In,
-    LengthEquals,
-    LengthGreaterThan,
-    LengthLessThan
-)
-
+from .collection import Contains, In, LengthEquals, LengthGreaterThan, LengthLessThan
 from .comparisons import (
     Equals,
-    NotEquals,
     GreaterThan,
     GreaterThanOrEqual,
     LessThan,
-    LessThanOrEqual
+    LessThanOrEqual,
+    NotEquals,
 )
-from .string import (
-    Regex,
-    StartsWith,
-    EndsWith
-)
-
-from .logical import (
-    And,
-    Or,
-    Not
-)
+from .logical import And, Not, Or
+from .string import EndsWith, Regex, StartsWith
 
 __all__ = [
     "Contains",

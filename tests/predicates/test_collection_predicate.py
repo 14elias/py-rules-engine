@@ -1,7 +1,13 @@
 import pytest
-from rules_engine.predicates.base import Predicate
-from rules_engine.predicates import Contains, In, LengthEquals, LengthGreaterThan, LengthLessThan
 
+from rules_engine.predicates import (
+    Contains,
+    In,
+    LengthEquals,
+    LengthGreaterThan,
+    LengthLessThan,
+)
+from rules_engine.predicates.base import Predicate
 
 # ====================== HELPER FIXTURES ======================
 
@@ -229,11 +235,13 @@ def test_serialization_roundtrip():
     for original in test_cases:
         data = original.to_dict()
         reconstructed = Predicate.from_dict(data)
+
+        array = [1, 2, 3, 4, 5]
         
         assert isinstance(reconstructed, original.__class__)
         assert reconstructed == original
         # Also test that evaluate still works the same
-        assert reconstructed.evaluate([1, 2, 3, 4, 5]) == original.evaluate([1, 2, 3, 4, 5])
+        assert reconstructed.evaluate(array) == original.evaluate(array)
 
 
 def test_invalid_from_dict():

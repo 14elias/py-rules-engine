@@ -1,8 +1,8 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import Any, Dict, Type, ClassVar
-import json
 
+import json
+from abc import ABC, abstractmethod
+from typing import Any, ClassVar, Dict, Type
 
 
 class Rule(ABC):
@@ -24,7 +24,8 @@ class Rule(ABC):
     def register(cls, name: str):
         """Decorator to register a rule class in the global registry.
 
-        This enables proper deserialization via `Rule.from_dict()` and `Rule.from_json()`.
+        This enables proper deserialization via `Rule.from_dict()` and 
+        `Rule.from_json()`.
         """
 
         def wrapper(subclass: Type['Rule']):
@@ -83,8 +84,8 @@ class Rule(ABC):
 
         import importlib
         import pkgutil
+
         import rules_engine.rules as rules_pkg
-        import rules_engine.core.combinators 
 
         # Automatically find and import all modules in the rules directory
         package = rules_pkg.__name__
@@ -125,7 +126,7 @@ class Rule(ABC):
 
     def __invert__(self):
         """Return the logical negation of this rule (NOT)."""
-        
+
         from .combinators import NotRule
         return NotRule(self)
     

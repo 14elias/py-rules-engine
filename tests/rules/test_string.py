@@ -1,7 +1,8 @@
-import pytest
 import re
+
+import pytest
+
 from rules_engine import Field, Rule
-from rules_engine.core.base import Rule  
 
 
 @pytest.fixture

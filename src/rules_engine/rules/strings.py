@@ -1,9 +1,9 @@
-from dataclasses import dataclass
-from typing import Any, Dict, Union, Pattern
 import re
+from dataclasses import dataclass
+from typing import Any, Dict, Pattern, Union
+
 from rules_engine.core.base import Rule
 from rules_engine.utils.nested import get_nested
-
 
 
 @Rule.register("StartsWithRule")
@@ -144,11 +144,16 @@ class RegexMatchRule(Rule):
 
     def to_dict(self) -> Dict[str, Any]:
         """Serialize the rule (stores the pattern string)."""
+        pattern = None
+        if hasattr(self.pattern, "pattern"):
+            pattern = self.pattern.pattern
+        else:
+            pattern = self.pattern
 
         return {
             "type": self._type,
             "field": self.field_name,
-            "pattern": self.pattern.pattern if hasattr(self.pattern, "pattern") else self.pattern,
+            "pattern": pattern,
         }
 
     @classmethod
@@ -161,11 +166,23 @@ class RegexMatchRule(Rule):
         if not isinstance(other, self.__class__):
             return False
         
-        self_p = self.pattern.pattern if hasattr(self.pattern, "pattern") else self.pattern
-        other_p = other.pattern.pattern if hasattr(other.pattern, "pattern") else other.pattern
+        self_p = None
+        other_p = None
+
+        if hasattr(self.pattern, "pattern"):
+            self_p = self.pattern.pattern 
+        else: 
+            self_p = self.pattern
+
+
+        if hasattr(other.pattern, "pattern"):
+            other_p = other.pattern.pattern 
+        else: 
+            other_p = other.pattern
+        
         return self.field_name == other.field_name and self_p == other_p
 
     def __repr__(self) -> str:
         """Return a readable representation using Field.matches() syntax."""
-        
+
         return f"Field({self.field_name!r}).matches({self.pattern!r})"

@@ -1,8 +1,7 @@
 import pytest
+
 from rules_engine import Field, Rule
-from rules_engine.rules.contains import ContainsRule   
-
-
+from rules_engine.rules.contains import ContainsRule
 
 
 @pytest.fixture

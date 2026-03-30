@@ -1,11 +1,10 @@
-import pytest
 from dataclasses import dataclass
 from typing import Any
 
+import pytest
+
 from rules_engine import Rule
-from rules_engine.core.combinators import AndRule, OrRule, NotRule, ParenRule
-
-
+from rules_engine.core.combinators import AndRule, NotRule, OrRule, ParenRule
 
 # ====================== TEST  (for building rules) ======================
 

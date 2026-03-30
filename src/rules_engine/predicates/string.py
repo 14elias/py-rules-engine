@@ -1,5 +1,7 @@
 import re
+
 from .base import Predicate
+
 
 @Predicate.register("regex")
 class Regex(Predicate):

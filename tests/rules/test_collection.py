@@ -1,8 +1,8 @@
 import pytest
-from rules_engine import Field, Rule
-from rules_engine.rules.collection import AnyRule, AllRule
-from rules_engine.predicates import Contains, GreaterThan, Equals
 
+from rules_engine import Field, Rule
+from rules_engine.predicates import Contains, Equals, GreaterThan
+from rules_engine.rules.collection import AllRule, AnyRule
 
 
 @pytest.fixture

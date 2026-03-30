@@ -1,5 +1,6 @@
 from typing import Any
 
+
 def get_nested(data: Any, path: str, default: Any = None) -> Any:
     """Safely access nested dictionary values using dot notation.
 

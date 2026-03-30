@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import Any, Dict
-from rules_engine.core.base import Rule
-from rules_engine.utils.nested import get_nested
-from rules_engine.predicates.base import Predicate
 
+from rules_engine.core.base import Rule
+from rules_engine.predicates.base import Predicate
+from rules_engine.utils.nested import get_nested
 
 
 @Rule.register("AnyRule")
@@ -56,8 +56,9 @@ class AnyRule(Rule):
 @Rule.register("AllRule")
 @dataclass(frozen=True)
 class AllRule(Rule):
-    """Rule that returns True if ALL items in a collection satisfy the given predicate."""
-    
+    """Rule that returns True if ALL items in a collection satisfy 
+    the given predicate."""
+
     field_name: str
     predicate: Predicate
 
@@ -72,7 +73,10 @@ class AllRule(Rule):
         collection = get_nested(data, self.field_name)
         if not isinstance(collection, (list, tuple, set)):
             return False
-        return all(self.predicate.evaluate(item) for item in collection) if collection else False
+        if collection:
+            return all(self.predicate.evaluate(item) for item in collection)
+        else : 
+            return False
 
     def to_dict(self) -> Dict[str, Any]:
         return {

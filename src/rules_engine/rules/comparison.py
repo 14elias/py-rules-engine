@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Any, Dict
+
 from rules_engine.core.base import Rule
 from rules_engine.utils.nested import get_nested
-
 
 
 @Rule.register("ComparisonRule")
@@ -33,21 +33,28 @@ class ComparisonRule(Rule):
 
         Note:
             - Returns False if the field is missing or None.
-            - Returns False if the actual value and comparison value have different types.
+            - Returns False if the actual value and comparison value 
+            have different types.
         """
 
         actual = get_nested(data, self.field_name)
         if actual is None:
             return False
-        if type(actual) != type(self.value):
+        if type(actual) is not type(self.value):
             return False
 
-        if self.operator == "==": return actual == self.value
-        if self.operator == "!=": return actual != self.value
-        if self.operator == ">":  return actual > self.value
-        if self.operator == ">=": return actual >= self.value
-        if self.operator == "<":  return actual < self.value
-        if self.operator == "<=": return actual <= self.value
+        if self.operator == "==": 
+            return actual == self.value
+        if self.operator == "!=": 
+            return actual != self.value
+        if self.operator == ">":  
+            return actual > self.value
+        if self.operator == ">=": 
+            return actual >= self.value
+        if self.operator == "<":  
+            return actual < self.value
+        if self.operator == "<=": 
+            return actual <= self.value
         raise ValueError(f"Unknown operator: {self.operator}")
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,5 +90,5 @@ class ComparisonRule(Rule):
 
     def __repr__(self) -> str:
         """Return a readable string representation of the rule."""
-        
+
         return f"Field({self.field_name!r}) {self.operator} {self.value!r}"

@@ -1,5 +1,5 @@
-from typing import Any, Dict, Type
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Type
 
 
 class Predicate(ABC):
@@ -8,7 +8,8 @@ class Predicate(ABC):
     Predicates are used primarily with collection rules like `.any()` and `.all()`
     to define conditions that should be applied to individual items in a list.
 
-    This system mirrors the main `Rule` class but operates on single values instead of entire data dicts.
+    This system mirrors the main `Rule` class but operates on single values instead of
+    entire data dicts.
     """
 
     _registry: Dict[str, Type["Predicate"]] = {}
@@ -58,7 +59,7 @@ class Predicate(ABC):
     @classmethod
     def register(cls, name: str):
         """Decorator to register a predicate class in the global registry."""
-        
+
         def decorator(subclass):
             cls._registry[name] = subclass
             subclass._type = name

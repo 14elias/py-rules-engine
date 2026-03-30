@@ -1,8 +1,8 @@
 import pytest
-from rules_engine.predicates import Regex, StartsWith, EndsWith, And, Or, Not
-from rules_engine.predicates.base import Predicate
-from rules_engine.predicates.comparisons import GreaterThan, Equals
 
+from rules_engine.predicates import And, EndsWith, Not, Or, Regex, StartsWith
+from rules_engine.predicates.base import Predicate
+from rules_engine.predicates.comparisons import Equals, GreaterThan
 
 # ====================== Fixtures ======================
 
@@ -61,7 +61,8 @@ def test_and_multiple_all_true(sample_value, simple_predicates):
         simple_predicates["regex_ethiopia"]
     )
     assert pred.evaluate(sample_value["bio"]) is False   # bio doesn't end with "com"
-    assert pred.evaluate(sample_value["email"]) is False # email doesn't contain "Ethiopia"
+    assert pred.evaluate(sample_value["email"]) is False 
+    # email doesn't contain "Ethiopia"
 
 
 def test_and_short_circuit(sample_value, simple_predicates):
@@ -180,7 +181,8 @@ def test_or_parametrized(predicates, value, expected):
 
 def test_not_basic(sample_value, simple_predicates):
     pred = Not(simple_predicates["starts_ab"])
-    assert pred.evaluate(sample_value["name"]) is False   # "Abel" starts with "Ab" → Not = False
+    assert pred.evaluate(sample_value["name"]) is False   
+    # "Abel" starts with "Ab" → Not = False
     assert pred.evaluate("xyz") is True
 
 
@@ -224,7 +226,8 @@ def test_nested_and_or(sample_value):
 
     assert p.evaluate("Abel from Ethiopia") is True
     assert p.evaluate("test@example.com") is False          # no Ethiopia
-    assert p.evaluate("Hello world from Ethiopia") is False # doesn't start with Ab nor end with com
+    assert p.evaluate("Hello world from Ethiopia") is False 
+    # doesn't start with Ab nor end with com
 
 
 def test_deep_nesting(sample_value):
@@ -330,7 +333,8 @@ def test_logical_equality_with_nested():
 # ====================== Error / Edge Cases ======================
 
 def test_and_with_non_predicate_raises():
-    """Passing non-Predicate objects should ideally fail early, but at least evaluate should be safe."""
+    """Passing non-Predicate objects should ideally fail early, 
+    but at least evaluate should be safe."""
     with pytest.raises(TypeError):  
         And("not a predicate", StartsWith("Ab"))
 

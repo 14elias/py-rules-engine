@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Any, Dict
+
 from rules_engine.core.base import Rule
 from rules_engine.utils.nested import get_nested
-
 
 
 @Rule.register("ContainsRule")

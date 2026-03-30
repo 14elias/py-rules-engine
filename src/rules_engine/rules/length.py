@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any, Dict
+
 from rules_engine.core.base import Rule
 from rules_engine.utils.nested import get_nested
 
@@ -29,7 +30,8 @@ class LengthComparisonRule(Rule):
         """Evaluate the length comparison.
 
         Note:
-            Returns False if the field is missing, None, or not a sized collection/string.
+            Returns False if the field is missing, None, or not a 
+            sized collection/string.
         """
 
         value = get_nested(data, self.field_name)
@@ -40,12 +42,18 @@ class LengthComparisonRule(Rule):
         except TypeError:
             return False
 
-        if self.operator == "==": return actual_len == self.length
-        if self.operator == "!=": return actual_len != self.length
-        if self.operator == ">":  return actual_len > self.length
-        if self.operator == ">=": return actual_len >= self.length
-        if self.operator == "<":  return actual_len < self.length
-        if self.operator == "<=": return actual_len <= self.length
+        if self.operator == "==": 
+            return actual_len == self.length
+        if self.operator == "!=": 
+            return actual_len != self.length
+        if self.operator == ">":  
+            return actual_len > self.length
+        if self.operator == ">=": 
+            return actual_len >= self.length
+        if self.operator == "<":  
+            return actual_len < self.length
+        if self.operator == "<=": 
+            return actual_len <= self.length
         return False
 
     def to_dict(self) -> Dict[str, Any]:

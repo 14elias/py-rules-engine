@@ -1,8 +1,7 @@
 import pytest
-from rules_engine import Rule
 
+from rules_engine import Field, Rule
 
-import pytest
 
 @pytest.fixture
 def sample_data():
@@ -55,7 +54,7 @@ def test_unknown_rule_type_raises_clear_error():
         Rule.from_dict({"type": "NonExistentRule"})
 
 
-from rules_engine import Field
+
 
 def test_and_rule(sample_data):
     rule = (Field("age") > 18) & (Field("country") == "US")

@@ -1,5 +1,6 @@
 from .base import Predicate
 
+
 @Predicate.register("contains")
 class Contains(Predicate):
     """Predicate that checks if a value contains a specific item (membership test)."""

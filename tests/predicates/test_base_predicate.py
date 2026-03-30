@@ -1,7 +1,7 @@
 import pytest
 
 from rules_engine.predicates.base import Predicate
-from rules_engine.predicates.comparisons import  GreaterThan
+from rules_engine.predicates.comparisons import GreaterThan
 
 
 def test_predicate_factory_serialization():

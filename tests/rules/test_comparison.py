@@ -1,6 +1,7 @@
 import pytest
+
 from rules_engine import Field, Rule
-from rules_engine.rules.comparison import ComparisonRule  
+from rules_engine.rules.comparison import ComparisonRule
 
 
 @pytest.fixture

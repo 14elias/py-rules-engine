@@ -1,8 +1,9 @@
-import pytest
 import re
-from rules_engine.predicates import Regex, StartsWith, EndsWith
-from rules_engine.predicates.base import Predicate
 
+import pytest
+
+from rules_engine.predicates import EndsWith, Regex, StartsWith
+from rules_engine.predicates.base import Predicate
 
 # ====================== Fixture for Predicates ======================
 

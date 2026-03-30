@@ -1,5 +1,6 @@
 from .base import Predicate
 
+
 @Predicate.register("equals")
 class Equals(Predicate):
     """Predicate that checks for equality between a value and an expected value."""
@@ -8,7 +9,7 @@ class Equals(Predicate):
         self.expected = expected
 
     def evaluate(self, value):
-        if type(value) != type(self.expected):
+        if type(value) is not type(self.expected):
             return False
         return value == self.expected
 
@@ -38,7 +39,7 @@ class NotEquals(Predicate):
         self.expected = expected
 
     def evaluate(self, value):
-        if type(value) != type(self.expected):
+        if type(value) is not type(self.expected):
             return True
         
         return value != self.expected
@@ -65,7 +66,7 @@ class GreaterThan(Predicate):
         self.threshold = threshold
 
     def evaluate(self, value):
-        if type(value) != type(self.threshold):
+        if type(value) is not type(self.threshold):
             return False
         return value > self.threshold
 
@@ -92,7 +93,7 @@ class GreaterThanOrEqual(Predicate):
         self.threshold = threshold
 
     def evaluate(self, value):
-        if type(value) != type(self.threshold):
+        if type(value) is not type(self.threshold):
             return False
         return value >= self.threshold
 
@@ -118,7 +119,7 @@ class LessThan(Predicate):
         self.threshold = threshold
 
     def evaluate(self, value):
-        if type(value) != type(self.threshold):
+        if type(value) is not type(self.threshold):
             return False
         return value < self.threshold
 
@@ -140,12 +141,12 @@ class LessThan(Predicate):
 @Predicate.register("lte")
 class LessThanOrEqual(Predicate):
     """Predicate that checks if value <= threshold."""
-    
+
     def __init__(self, threshold):
         self.threshold = threshold
 
     def evaluate(self, value):
-        if type(value) != type(self.threshold):
+        if type(value) is not type(self.threshold):
             return False
         return value <= self.threshold
 
