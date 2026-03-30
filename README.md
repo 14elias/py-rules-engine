@@ -1,5 +1,10 @@
 # rules-engine
 
+![CI](https://github.com/14elias/rules-engine/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![License](https://img.shields.io/github/license/14elias/rules-engine)
+![Version](https://img.shields.io/github/v/release/14elias/rules-engine)
+
 **A composable, JSON-serializable rule engine for Python.**
 
 Build reusable, expressive business logic using a clean and intuitive DSL. Perfect for API validation, feature flags, access control, data filtering, fraud detection, and rule-based decision systems.
@@ -72,13 +77,17 @@ Field is the primary way to create rules. It uses Python's operator overloading 
 ```python
 from rules_engine import Field
 
-f = Field("user")
+# Simple comparisons
+Field("age") >= 18
+Field("status") == "active"
 
-rule1 = f.age >= 18
-rule2 = f.role == "admin"
-rule3 = f.email.matches(r".+@example\\.com")
-rule4 = f.tags.any(Contains("premium"))
-rule5 = f.bio.len() >= 50
+# String operations
+Field("name").startswith("guest")
+Field("email").matches(r".+@company\.com")
+
+# Collection operations
+Field("tags").contains("python")
+Field("tags").len() >= 3
 ```
 
 ### Supported Operations on Field
@@ -247,6 +256,7 @@ from rules_engine.predicates import (
 ## 🤝 Contributing
 
 Contributions, bug reports, and feature requests are welcome!
+See CONTRIBUTING.md for guidelines.
 
 ---
 
