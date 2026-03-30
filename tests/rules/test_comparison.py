@@ -149,7 +149,7 @@ def test_comparison_equality_different_operators():
     assert r1 != r2
 
 
-def test_comparison_repr(sample_data2):
+def test_comparison_repr(sample_data):
     rule = Field("age") > 18
     repr_str = repr(rule)
     assert "Field('age')" in repr_str
