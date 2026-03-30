@@ -45,8 +45,7 @@ jobs:
 
       # 8. Upload coverage to GitHub Actions summary (optional)
       - name: Upload coverage report
-        if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: htmlcov/
