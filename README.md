@@ -1,143 +1,255 @@
 # rules-engine
 
-A composable, JSON-serializable rule engine for Python.
+**A composable, JSON-serializable rule engine for Python.**
 
-Build reusable, expressive logic using a clean DSL — perfect for validation, filtering, and decision systems.
+Build reusable, expressive business logic using a clean and intuitive DSL. Perfect for API validation, feature flags, access control, data filtering, fraud detection, and rule-based decision systems.
 
 ---
 
-## ✨ Installation
+## ✨ Features
+
+- Elegant DSL using `Field("path")` with natural Python operators (`>=`, `==`, `&`, `|`, `~`)
+- Deep nested field access (`"user.profile.age"`, `"items.0.price"`)
+- Full JSON serialization & deserialization support
+- Powerful collection operations: `.any()` and `.all()`
+- Rich string, numeric, and length-based rules
+- Logical composition with `&` (AND), `|` (OR), and `~` (NOT)
+- Extensible via custom predicates
+- Zero runtime dependencies
+
+---
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
 pip install rules-engine
 ```
 
----
-
-## 🚀 Quick Example
+### Simple Example
 
 ```python
 from rules_engine import Field
 
+# Build expressive rules using Field
 rule = (
-    ((Field("age") >= 18) & (Field("is_premium") == True)) |
-    (Field("role") == "admin")
-)
+    (Field("age") >= 18) & (Field("is_premium") == True)
+) | (Field("role") == "admin")
 
 data = {"age": 25, "is_premium": False, "role": "user"}
 
-print(rule.evaluate(data))  # True
+print(rule.evaluate(data))   # True
 ```
 
----
-
-## 🔥 Features
-
-- Compose rules using:
-  - `&` → AND
-  - `|` → OR
-  - `~` → NOT
-
-- Safe nested field access using dot notation
-- JSON serialization / deserialization
-- Built-in predicates:
-  - `contains`
-  - `regex / matches`
-  - `startswith`
-  - `length`
-
-- Clean and expressive DSL
-- Extensible architecture (custom rules & predicates)
-
----
-
-## 🧩 Nested Fields
-
-Access deeply nested data easily:
+### Working with Nested Data
 
 ```python
 user = {
-    "profile": {
-        "age": 25,
-        "country": "ET"
-    },
-    "roles": ["user", "editor"]
+    "profile": {"age": 25, "country": "ET"},
+    "roles": ["user", "editor"],
+    "bio": "Hello world from Ethiopia"
 }
 
-age_ok      = Field("profile.age") >= 18
-in_ethiopia = Field("profile.country") == "ET"
-has_role    = Field("roles").contains("editor")
+age_ok = Field("profile.age") >= 18
+from_ethiopia = Field("profile.country") == "ET"
+has_editor = Field("roles").contains("editor")
+long_bio = Field("bio").len() > 10
 
-print((age_ok & in_ethiopia).evaluate(user))  # True
+rule = (age_ok & from_ethiopia) | (has_editor & long_bio)
+
+print(rule.evaluate(user))   # True
 ```
 
 ---
 
-## 🧠 Predicates
+## 🧠 Core Concepts
 
-### Collections
+### Field — The Main DSL Builder
+
+Field is the primary way to create rules. It uses Python's operator overloading and method chaining to create readable rules.
 
 ```python
-Field("tags").contains("vip")
-Field("orders").len() >= 10
+from rules_engine import Field
+
+f = Field("user")
+
+rule1 = f.age >= 18
+rule2 = f.role == "admin"
+rule3 = f.email.matches(r".+@example\\.com")
+rule4 = f.tags.any(Contains("premium"))
+rule5 = f.bio.len() >= 50
 ```
 
-### Strings
+### Supported Operations on Field
+
+| Operation              | Example                                       | Description                  |
+| ---------------------- | --------------------------------------------- | ---------------------------- |
+| `==, !=, >, >=, <, <=` | `Field("age") >= 18`                          | Numeric / value comparison   |
+| `.startswith()`        | `Field("name").startswith("Ab")`              | String prefix                |
+| `.endswith()`          | `Field("email").endswith(".com")`             | String suffix                |
+| `.matches()`           | `Field("email").matches(r".+@example\\.com")` | Regex match                  |
+| `.contains()`          | `Field("tags").contains("python")`            | Check if value contains item |
+| `.len()`               | `Field("tags").len() >= 3`                    | Length comparison            |
+| `.any(predicate)`      | `Field("scores").any(GreaterThan(50))`        | Any item matches predicate   |
+| `.all(predicate)`      | `Field("tags").all(StartsWith("py"))`         | All items match predicate    |
+
+---
+
+### Logical Composition
+
+You can combine rules using Python operators:
 
 ```python
-Field("email").matches(r".+@company\.com$")
-Field("username").startswith("guest_")
+from rules_engine import Field
+
+adult = Field("age") >= 18
+premium = Field("is_premium") == True
+admin = Field("role") == "admin"
+
+# Combine rules
+main_rule = (adult & premium) | admin
+
+# Negation
+not_admin = ~admin
 ```
 
 ---
 
-## 🔄 Serialization
+## 🔍 Predicates
+
+Predicates are used primarily with `.any()` and `.all()` on collections.
+
+### Built-in Predicates
+
+```python
+from rules_engine.predicates import (
+    Equals, NotEquals,
+    GreaterThan, GreaterThanOrEqual,
+    LessThan, LessThanOrEqual,
+    StartsWith, EndsWith, Regex,
+    Contains, And, Or, Not
+)
+```
+
+### Examples
+
+```python
+from rules_engine.predicates import Contains, GreaterThan, Equals
+
+data = {
+    "tags": ["python", "ai", "ethiopia"],
+    "scores": [10, 20, 35]
+}
+
+has_ai_tag = Field("tags").any(Contains("ai"))
+has_high_score = Field("scores").any(GreaterThan(30))
+has_exact_two = Field("scores").any(Equals(2))
+```
+
+You can also combine predicates logically:
+
+```python
+complex_pred = And(StartsWith("py"), EndsWith("on"))
+rule = Field("tags").any(complex_pred)
+```
+
+---
+
+## 💾 Serialization
+
+All rules are fully serializable to JSON and can be restored later.
 
 ```python
 from rules_engine import Field, Rule
 
-rule = Field("age") >= 18
+rule = (Field("age") >= 18) & Field("country") == "ET"
 
+# Save to JSON
 json_str = rule.to_json()
+
+# Load from JSON
 restored = Rule.from_json(json_str)
 
-assert rule.evaluate({"age": 20}) == restored.evaluate({"age": 20})
+# Both rules behave identically
+assert rule.evaluate(data) == restored.evaluate(data)
 ```
 
 ---
 
-## 🧪 Example Use Cases
+## ⚙️ Creating Custom Predicates
+
+Custom predicates can be created by subclassing `Predicate` and registering them:
+
+```python
+from rules_engine.predicates.base import Predicate
+
+@Predicate.register("is_even")
+class IsEven(Predicate):
+    def evaluate(self, value):
+        if not isinstance(value, (int, float)):
+            return False
+        return value % 2 == 0
+
+    def to_dict(self):
+        return {"type": self._type}
+
+    @classmethod
+    def _from_dict_impl(cls, data):
+        return cls()
+
+    def __eq__(self, other):
+        return isinstance(other, IsEven)
+```
+
+Then use it:
+
+```python
+rule = Field("score").any(IsEven())
+```
+
+> Note: Custom Rules are currently not directly supported via the DSL. All rules must be created through the Field class.
+
+---
+
+## 📚 API Reference
+
+### Main Imports
+
+```python
+from rules_engine import Field, Rule
+from rules_engine.predicates import (
+    Equals, NotEquals, GreaterThan, GreaterThanOrEqual,
+    LessThan, LessThanOrEqual, StartsWith, EndsWith, Regex,
+    Contains, And, Or, Not
+)
+```
+
+### Key Classes
+
+- **Field** — DSL entry point for building rules
+- **Rule** — Base class for all rules (used mainly for deserialization)
+- **Predicate** — Base class for predicates used in `.any()` / `.all()`
+
+---
+
+## 🧩 Use Cases
 
 - API request validation
-- Feature flags & access control
-- Data filtering pipelines
-- Rule-based AI decision systems
+- Feature flags and access control
+- Dynamic data filtering
 - Fraud detection systems
-
-## 🏗️ Project Structure (for contributors)
-
-```
-src/
-  rules_engine/
-    core/
-    rules/
-    predicates/
-    field/
-    utils/
-```
+- Rule-based decision engines
+- User segmentation and personalization
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome!
-
-- Open an issue for bugs or feature requests
-- Submit pull requests for improvements
-- Help expand predicates and rule types
+Contributions, bug reports, and feature requests are welcome!
 
 ---
 
 ## 📄 License
 
-MIT License © 2026 Elias
+MIT License
