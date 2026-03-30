@@ -9,13 +9,27 @@ from rules_engine.predicates.base import Predicate
 @Rule.register("AnyRule")
 @dataclass(frozen=True)
 class AnyRule(Rule):
+    """Rule that returns True if ANY item in a collection satisfies the given predicate.
+
+    Example:
+        Field("roles").any(Equals("admin"))   
+    """
+
     field_name: str
     predicate: Predicate
+
+    def __post_init__(self):
+        if not isinstance(self.predicate, Predicate):
+            raise TypeError(
+                f'any argument to AnyRule() must be predicate instance '
+                f"Got {type(self.predicate).__name__}"
+            )
 
     def evaluate(self, data: Any) -> bool:
         collection = get_nested(data, self.field_name)
         if not isinstance(collection, (list, tuple, set)):
             return False
+
         return any(self.predicate.evaluate(item) for item in collection)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -42,8 +56,17 @@ class AnyRule(Rule):
 @Rule.register("AllRule")
 @dataclass(frozen=True)
 class AllRule(Rule):
+    """Rule that returns True if ALL items in a collection satisfy the given predicate."""
+    
     field_name: str
     predicate: Predicate
+
+    def __post_init__(self):
+        if not isinstance(self.predicate, Predicate):
+            raise TypeError(
+                f'any argument to AllRule() must be predicate instance '
+                f"Got {type(self.predicate).__name__}"
+            )
 
     def evaluate(self, data: Any) -> bool:
         collection = get_nested(data, self.field_name)

@@ -2,6 +2,8 @@ from .base import Predicate
 
 @Predicate.register("equals")
 class Equals(Predicate):
+    """Predicate that checks for equality between a value and an expected value."""
+
     def __init__(self, expected):
         self.expected = expected
 
@@ -30,6 +32,8 @@ class Equals(Predicate):
 
 @Predicate.register("not_equals")
 class NotEquals(Predicate):
+    """Predicate that checks for inequality."""
+
     def __init__(self, expected):
         self.expected = expected
 
@@ -55,6 +59,8 @@ class NotEquals(Predicate):
 
 @Predicate.register("gt")
 class GreaterThan(Predicate):
+    """Predicate that checks if value > threshold."""
+
     def __init__(self, threshold):
         self.threshold = threshold
 
@@ -80,6 +86,8 @@ class GreaterThan(Predicate):
 
 @Predicate.register("gte")
 class GreaterThanOrEqual(Predicate):
+    """Predicate that checks if value >= threshold."""
+
     def __init__(self, threshold):
         self.threshold = threshold
 
@@ -104,6 +112,8 @@ class GreaterThanOrEqual(Predicate):
 
 @Predicate.register("lt")
 class LessThan(Predicate):
+    """Predicate that checks if value < threshold."""
+
     def __init__(self, threshold):
         self.threshold = threshold
 
@@ -129,6 +139,8 @@ class LessThan(Predicate):
 
 @Predicate.register("lte")
 class LessThanOrEqual(Predicate):
+    """Predicate that checks if value <= threshold."""
+    
     def __init__(self, threshold):
         self.threshold = threshold
 

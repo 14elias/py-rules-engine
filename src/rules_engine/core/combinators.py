@@ -5,6 +5,12 @@ from .base import Rule
 @Rule.register("AndRule")
 @dataclass(frozen=True)
 class AndRule(Rule):
+    """Logical AND rule.
+
+    Evaluates to True only if both left and right rules evaluate to True.
+    Supports short-circuit evaluation (right side is not evaluated if left is False).
+    """
+
     left: Rule
     right: Rule
 
@@ -41,6 +47,12 @@ class AndRule(Rule):
 @Rule.register("OrRule")
 @dataclass(frozen=True)
 class OrRule(Rule):
+    """Logical OR rule.
+
+    Evaluates to True if at least one of the left or right rules evaluates to True.
+    Supports short-circuit evaluation (right side is not evaluated if left is True).
+    """
+
     left: Rule
     right: Rule
 
@@ -77,6 +89,11 @@ class OrRule(Rule):
 @Rule.register("NotRule")
 @dataclass(frozen=True)
 class NotRule(Rule):
+    """Logical NOT rule.
+
+    Inverts the result of the child rule.
+    """
+
     child: Rule
 
     def evaluate(self, data):
@@ -99,6 +116,12 @@ class NotRule(Rule):
 @Rule.register("ParenRule")
 @dataclass(frozen=True)
 class ParenRule(Rule):
+    """Wrapper rule used for explicit grouping / parentheses in complex expressions.
+
+    This rule simply delegates evaluation and serialization to its child.
+    Mainly useful for preserving structure during serialization/deserialization.
+    """
+    
     child: Rule
 
     def evaluate(self, data: Any) -> bool:

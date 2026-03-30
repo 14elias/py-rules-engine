@@ -118,7 +118,6 @@ def test_length_invalid_type_bool(sample_data):
 
 def test_length_unsupported_operator(sample_data):
     """Unknown operator should return False."""
-    # Create rule directly to bypass Field DSL which only supports valid operators
     rule = LengthComparisonRule(field_name="tags", operator="invalid_op", length=5)
     assert rule.evaluate(sample_data) is False
 

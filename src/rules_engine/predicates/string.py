@@ -3,6 +3,8 @@ from .base import Predicate
 
 @Predicate.register("regex")
 class Regex(Predicate):
+    """Predicate that checks if a string matches a regular expression pattern."""
+
     def __init__(self, pattern: str):
         self.pattern = pattern
 
@@ -41,6 +43,8 @@ class Regex(Predicate):
 
 @Predicate.register("startswith")
 class StartsWith(Predicate):
+    """Predicate that checks if a string starts with a given prefix."""
+
     def __init__(self, prefix):
         self.prefix = prefix
 
@@ -71,6 +75,8 @@ class StartsWith(Predicate):
 
 @Predicate.register("endswith")
 class EndsWith(Predicate):
+    """Predicate that checks if a string ends with a given suffix."""
+    
     def __init__(self, suffix):
         self.suffix = suffix
 

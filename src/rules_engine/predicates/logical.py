@@ -3,6 +3,8 @@ from .base import Predicate
 
 @Predicate.register("and")
 class And(Predicate):
+    """Logical AND predicate that requires ALL child predicates to be True."""
+
     def __init__(self, *predicates):
         if not predicates:
             self.predicates = ()
@@ -49,6 +51,8 @@ class And(Predicate):
 
 @Predicate.register("or")
 class Or(Predicate):
+    """Logical OR predicate that returns True if ANY child predicate is True."""
+
     def __init__(self, *predicates):
         if not predicates:
             self.predicates = ()
@@ -97,6 +101,8 @@ class Or(Predicate):
 
 @Predicate.register("not")
 class Not(Predicate):
+    """Logical NOT predicate that inverts the result of a child predicate."""
+    
     def __init__(self, predicate):
         if not isinstance(predicate, Predicate):
             raise TypeError(

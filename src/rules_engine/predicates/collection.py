@@ -2,6 +2,8 @@ from .base import Predicate
 
 @Predicate.register("contains")
 class Contains(Predicate):
+    """Predicate that checks if a value contains a specific item (membership test)."""
+
     def __init__(self, item):
         self.item = item
 
@@ -27,6 +29,8 @@ class Contains(Predicate):
 
 @Predicate.register("in")
 class In(Predicate):
+    """Predicate that checks if a value is present in a given set of options."""
+
     def __init__(self, options):
         self.options = options
 
@@ -50,6 +54,8 @@ class In(Predicate):
 
 @Predicate.register("len_eq")
 class LengthEquals(Predicate):
+    """Predicate that checks if the length of a value equals a specific number."""
+
     def __init__(self, length):
         self.length = length
 
@@ -73,6 +79,8 @@ class LengthEquals(Predicate):
 
 @Predicate.register("len_gt")
 class LengthGreaterThan(Predicate):
+    """Predicate that checks if the length of a value is greater than a number."""
+
     def __init__(self, length):
         self.length = length
 
@@ -96,6 +104,8 @@ class LengthGreaterThan(Predicate):
 
 @Predicate.register("len_lt")
 class LengthLessThan(Predicate):
+    """Predicate that checks if the length of a value is less than a number."""
+    
     def __init__(self, length):
         self.length = length
 
