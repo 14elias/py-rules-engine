@@ -1,4 +1,4 @@
-# py-rules-engine
+# rules-engine-py
 
 ![CI](https://github.com/14elias/rules-engine/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -29,7 +29,7 @@ Build reusable, expressive business logic using a clean and intuitive DSL. Perfe
 ### Installation
 
 ```bash
-pip install py-rules-engine
+pip install rules-engine-py
 ```
 
 ### Simple Example
